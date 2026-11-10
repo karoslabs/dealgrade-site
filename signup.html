@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Create your account · Dealgrade</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#161616">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="site.css">
+</head>
+<body data-page="auth">
+<main class="auth">
+  <div class="auth-brand">
+    <img class="bg" src="assets/dubai-tower.jpg" alt="" width="927" height="1400">
+    <a class="brand" href="index.html"><img src="assets/icon.svg" alt="" width="30" height="30">Dealgrade</a>
+    <div>
+      <h1>Know what a Dubai home is worth before you deal.</h1>
+      <div class="auth-facts"><div><b class="num">1.28M</b><span>registered Dubai sales behind every estimate</span></div><div><b>A to F</b><span>a grade on every asking price</span></div><div><b>Direct</b><span>owners and buyers, no agent in between</span></div></div>
+    </div>
+  </div>
+  <div class="auth-form">
+    <form id="form" data-go="https://dealgrade.co/signup" novalidate>
+      <h2>Create your account</h2>
+      <p id="why">Save valuations, follow the market and talk to owners directly.</p>
+      <label class="field"><span>Your name</span><input class="input" type="text" name="full_name" placeholder="Layla Haddad" autocomplete="name" required></label>
+      <label class="field"><span>Email</span><input class="input" type="email" name="email" placeholder="you@example.com" autocomplete="email" required></label>
+      <div class="field"><label for="pw">Password</label><div class="pw"><input class="input" id="pw" type="password" name="password" placeholder="Create a password" autocomplete="new-password" required><button type="button" data-show="pw">Show</button></div><small>At least 8 characters, with a letter and a digit.</small></div>
+      <div class="field"><label for="pw2">Confirm password</label><div class="pw"><input class="input" id="pw2" type="password" name="confirm" placeholder="Enter it again" autocomplete="new-password" required><button type="button" data-show="pw2">Show</button></div></div>
+      <button class="btn btn-solid btn-block" type="submit">Send me a code</button>
+      <p>Already have an account? <a href="login.html">Sign in</a></p>
+      <p class="note" style="margin:0">Step 1 of 2. We email you a code to confirm the address.</p>
+    </form>
+  </div>
+</main>
+<script src="auth.js"></script>
+</body>
+</html>

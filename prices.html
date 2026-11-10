@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prices · Dealgrade</title>
+<meta name="description" content="How Dubai home prices have moved, and what homes sell for in each area, from sales registered with the Dubai Land Department.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#161616">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="site.css">
+</head>
+<body data-page="prices">
+<a class="skip" href="#main">Skip to the page</a>
+<header id="head"></header>
+
+<main id="main">
+<section class="page-top">
+  <div class="wrap">
+    <h1 data-split>How Dubai home prices have moved.</h1>
+    <p class="sub" data-reveal>Prices and sales in each area, from sales registered with the Dubai Land Department.</p>
+    <div class="tabs" role="tablist" aria-label="Kind of home" style="margin-top:30px" data-reveal>
+      <button type="button" role="tab" aria-selected="true" data-k="apartments">Apartments</button><button type="button" role="tab" aria-selected="false" data-k="villas">Villas</button>
+    </div>
+    <div class="kpi4" data-reveal>
+      <div><strong class="num" id="kYear"></strong><span>prices in the past year, like for like</span></div>
+      <div><strong class="num" id="kFive"></strong><span>prices in the past five years</span></div>
+      <div><strong class="num" id="kSold"></strong><span id="kSoldL"></span></div>
+      <div><strong id="kBusy" style="font-size:clamp(1.3rem,2.2vw,1.9rem);line-height:1.1"></strong><span id="kBusyL" class="num"></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec-tight">
+  <div class="wrap grid12" style="align-items:end">
+    <div style="grid-column:1/-1" id="chartBox" data-reveal>
+      <h2 class="h3" id="chartTitle">Apartment price index</h2>
+      <p class="sub" style="margin:10px 0 26px;max-width:46em;font-size:1rem">The second quarter of 2026 is 100. Each quarter compares similar homes (same area, size and bedrooms), so the line shows changes in price and not in the mix of homes sold.</p>
+      <svg class="chart" id="chart" viewBox="0 0 800 380" role="img" aria-label="Price index by quarter with a forecast to 2027"></svg>
+    </div>
+  </div>
+</section>
+
+<section class="sec rule-top">
+  <div class="wrap">
+    <div class="tbl-top">
+      <div><h2 class="h3">Prices by area</h2><p class="sub" style="margin-top:8px;font-size:1rem">The typical price of homes sold in each area over the past 12 months.</p></div>
+      <div><label class="sr" for="find">Find an area</label><input class="input" id="find" type="search" placeholder="Find an area"></div>
+    </div>
+    <div class="tbl-wrap px-table full-tbl">
+      <table>
+        <thead><tr><th scope="col"><button type="button" data-s="n">Area</button></th><th scope="col" aria-sort="descending"><button type="button" data-s="s">Sales</button></th><th scope="col"><button type="button" data-s="q">Per sqm</button></th><th scope="col"><button type="button" data-s="p">Typical price</button></th><th scope="col"><button type="button" data-s="y">1 year</button></th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p class="note" style="max-width:60em">From sales registered with the Dubai Land Department, excluding bulk transfers. Typical price is the median sale. The change compares the last 12 months with the 12 before. Figures are statistics, not valuations of any one home.</p>
+    <div class="cta"><a class="btn btn-solid" href="valuate.html">Value my property <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></a><a class="btn btn-line" href="map.html">Open the price map</a></div>
+  </div>
+</section>
+</main>
+
+<footer id="foot"></footer>
+<script src="data/market.js"></script>
+<script src="site.js"></script>
+<script>
+(function(){
+  var S = DGS, $ = S.$, $$ = S.$$, esc = S.esc, M = window.DG_MARKET;
+  var kind = new URLSearchParams(location.search).get('type') === 'villas' ? 'villas' : 'apartments', sort = 's', dir = -1;
+  function head(){
+    var d = M[kind], a = d.areas.slice().sort(function(x, y){ return y.s - x.s; })[0];
+    $('#kYear').textContent = d.year; $('#kFive').textContent = d.five; $('#kSold').textContent = d.sold;
+    $('#kSoldL').textContent = 'homes sold in 12 months, across the ' + d.busy + ' busiest areas';
+    $('#kBusy').textContent = a.n; $('#kBusyL').textContent = 'the busiest area: ' + a.s.toLocaleString('en-US') + ' sales at AED ' + a.q.toLocaleString('en-US') + ' per sqm';
+    $('#chartTitle').textContent = (kind === 'villas' ? 'Villa' : 'Apartment') + ' price index';
+    var box = $('#chartBox'), was = box.classList.contains('in');
+    box.classList.remove('in'); S.indexChart($('#chart'), d.index);
+    if(was) requestAnimationFrame(function(){ requestAnimationFrame(function(){ box.classList.add('in'); }); });
+    $$('.tabs button').forEach(function(b){ b.setAttribute('aria-selected', b.dataset.k === kind); });
+  }
+  function rows(){
+    var q = $('#find').value.trim().toLowerCase();
+    var list = M[kind].areas.filter(function(a){ return !q || a.n.toLowerCase().indexOf(q) >= 0; }).sort(function(x, y){
+      if(sort === 'n') return dir * x.n.localeCompare(y.n);
+      return dir * ((x[sort] == null ? -1e9 : x[sort]) - (y[sort] == null ? -1e9 : y[sort]));
+    });
+    $('#rows').innerHTML = list.length ? list.map(function(a){
+      return '<tr><td><a href="valuate.html?area=' + encodeURIComponent(a.n) + '">' + esc(a.n) + '</a></td><td class="num">' + a.s.toLocaleString('en-US') + '</td><td class="num">AED ' + a.q.toLocaleString('en-US') + '</td><td class="num">' + S.money(a.p) + '</td><td class="num ' + (a.y < 0 ? 'dn' : a.y > 0 ? 'up' : '') + '">' + (a.y == null ? 'n/a' : (a.y > 0 ? '+' : a.y < 0 ? '−' : '') + Math.abs(a.y).toFixed(1) + '%') + '</td></tr>';
+    }).join('') : '<tr><td colspan="5">No area matches that name.</td></tr>';
+    $$('th').forEach(function(th){ var b = $('button', th); if(b.dataset.s === sort) th.setAttribute('aria-sort', dir > 0 ? 'ascending' : 'descending'); else th.removeAttribute('aria-sort'); });
+  }
+  $$('.tabs button').forEach(function(b){ b.addEventListener('click', function(){ kind = b.dataset.k; head(); rows(); history.replaceState(null, '', kind === 'villas' ? '?type=villas' : location.pathname); }); });
+  $$('th button').forEach(function(b){ b.addEventListener('click', function(){ if(sort === b.dataset.s) dir = -dir; else { sort = b.dataset.s; dir = sort === 'n' ? 1 : -1; } rows(); }); });
+  $('#find').addEventListener('input', rows);
+  head(); rows();
+})();
+</script>
+</body>
+</html>

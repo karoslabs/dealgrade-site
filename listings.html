@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Listings · Dealgrade</title>
+<meta name="description" content="Homes for sale by their owners in Dubai, each priced against registered sales. No brokers and no commission.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#161616">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="site.css">
+</head>
+<body data-page="listings">
+<a class="skip" href="#main">Skip to the page</a>
+<header id="head"></header>
+
+<main id="main">
+<section class="page-top">
+  <div class="wrap">
+    <h1 data-split>Homes for sale by their owners.</h1>
+    <p class="sub" data-reveal>Each one is priced against registered sales, so the grade is on the listing. You deal with the owner directly, and nobody takes a commission.</p>
+
+    <form class="askbox" id="find" data-reveal role="search" style="max-width:860px">
+      <label class="sr" for="q">Describe what you are looking for</label>
+      <input class="input" id="q" placeholder="Two bed in Dubai Marina under 3M" autocomplete="off">
+      <button class="btn btn-solid" type="submit">Search</button>
+    </form>
+    <p class="note" data-reveal>Say it the way you would to an agent: where, how many bedrooms and your budget.</p>
+
+    <div class="count-row" style="margin-top:clamp(28px,4vw,48px)"><span id="count"></span><button type="button" id="clear" hidden>Clear the search</button></div>
+    <div id="results" style="display:grid;gap:18px"></div>
+  </div>
+</section>
+
+<section class="sec-tight">
+  <div class="wrap duo">
+    <a class="panel" href="login.html?next=sell" data-reveal>
+      <h2 class="h3">Selling your own home?</h2>
+      <p class="sub" style="margin-top:14px">List it yourself and talk to buyers directly. Your listing shows its estimate beside your asking price.</p>
+      <p style="margin-top:26px"><span class="link">List a property <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></p>
+    </a>
+    <a class="panel" href="projects.html" data-reveal style="--d:100ms">
+      <h2 class="h3">Looking at a new build?</h2>
+      <p class="sub" style="margin-top:14px">There are 1,226 developer projects in Dubai, each priced against what similar homes sold for. 399 of them carry a grade.</p>
+      <p style="margin-top:26px"><span class="link">See new projects <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></p>
+    </a>
+  </div>
+</section>
+
+<section class="sec light" id="distress">
+  <div class="wrap grid12" style="align-items:start">
+    <div style="grid-column:1/-1;max-width:900px">
+      <h2 class="h2" data-split>Distress sales are listed apart, for members.</h2>
+      <p class="sub" data-reveal>These are owners who have told Dealgrade they need to complete by a date, with the reason and the date they gave. Each one is priced against Dealgrade's own valuation, so you can see whether the urgency is in the asking price or only in the wording.</p>
+      <p class="sub" data-reveal>Every row is a statement someone made about their own finances, so it is not on a page anyone can open.</p>
+      <div class="cta" data-reveal><a class="btn btn-solid" href="login.html?next=distress">Sign in to see them</a><a class="btn btn-line" href="signup.html">Create your account</a></div>
+    </div>
+    <div style="grid-column:1/-1" data-reveal>
+      <h3 class="h3" style="margin-top:clamp(20px,3vw,40px)">What actually forces a sale in Dubai</h3>
+      <ul class="reasons">
+        <li><b>A lender enforcing</b><p>Under Law No. 14 of 2008 a defaulting borrower is served through the Land Department, and after the cure period the unit can go to court-ordered auction. Sellers come here before that happens, because a private sale beats a hammer price.</p></li>
+        <li><b>An off-plan payment plan</b><p>The buyer cannot fund the next milestone, and the developer can terminate and retain part of what has been paid. It transfers as an assignment of the sale agreement, with the developer's consent and fee, and not as an ordinary sale.</p></li>
+        <li><b>Service charge arrears</b><p>Whatever is outstanding to the owners' association is settled at transfer. Confirm the figure before you agree a price. A discount that exactly matches the arrears is not a discount.</p></li>
+      </ul>
+      <p class="sub" style="max-width:46em">Where a mortgage is still on the title, the transfer needs the lender's liability letter, a no-objection certificate and a blocking payment at the trustee office. That is what turns a four-week close into a six-week close, and it is flagged on every card where it applies.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer id="foot"></footer>
+<script src="site.js"></script>
+<script>
+(function(){
+  var S = DGS, $ = S.$, esc = S.esc;
+  /* The owner listings on dealgrade.co on 10 November 2026. Opening one needs an account. */
+  var HOMES = [
+    {title:'High floor two bed', area:'Marsa Dubai', also:'Dubai Marina', beds:2, sqm:110, status:'Ready', type:'Apartment', est:2200000, ask:2400000, grade:'C', delta:'about the same'}
+  ];
+  var AREAS = {'dubai marina':'marsa dubai', 'marina':'marsa dubai', 'jvc':'al barsha south fourth', 'jumeirah village circle':'al barsha south fourth', 'business bay':'business bay', 'arabian ranches':'wadi al safa 6', 'downtown':'burj khalifa'};
+  var WORDS = {studio:0, one:1, two:2, three:3, four:4, five:5};
+  function read(q){
+    var t = q.toLowerCase(), f = {};
+    var b = /(\d+|studio|one|two|three|four|five)[\s-]*(bed|br|b\/r)?/.exec(t);
+    if(/studio/.test(t)) f.beds = 0; else if(b && b[2]) f.beds = isNaN(+b[1]) ? WORDS[b[1]] : +b[1];
+    var p = /(under|below|max|up to)\s*(aed\s*)?([\d.,]+)\s*(m|k)?/.exec(t);
+    if(p) f.max = parseFloat(p[3].replace(/,/g, '')) * (p[4] === 'k' ? 1e3 : p[4] === 'm' || +p[3] < 1000 ? 1e6 : 1);
+    Object.keys(AREAS).forEach(function(k){ if(t.indexOf(k) >= 0) f.area = AREAS[k]; });
+    if(/villa/.test(t)) f.type = 'Villa';
+    if(/off[- ]?plan/.test(t)) f.status = 'Off-plan'; else if(/ready/.test(t)) f.status = 'Ready';
+    return f;
+  }
+  function card(h){
+    return '<a class="feature" href="login.html?next=listing"><div class="info" style="grid-column:1/-1"><div class="top"><div><h2 class="h3">' + esc(h.title) + '</h2><p class="sub" style="margin-top:8px">' + esc(h.also) + ' (' + esc(h.area) + ') · ' + h.sqm + ' sqm · ' + (h.beds ? h.beds + ' bedrooms' : 'Studio') + ' · ' + esc(h.status) + '</p></div><span class="badge ' + h.grade + '" aria-label="Deal grade ' + h.grade + '">' + h.grade + '</span></div>'
+      + '<div class="stats" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border-top:1px solid var(--rule);padding-top:22px"><div class="stat"><strong class="num">' + S.money(h.ask) + '</strong><span>asking price</span></div><div class="stat"><strong class="num">' + S.money(h.est) + '</strong><span>Dealgrade estimate</span></div><div class="stat"><strong>' + esc(S.LABELS[h.grade]) + '</strong><span>' + esc(h.delta) + ' as the estimate</span></div></div>'
+      + '<p><span class="link">Sign in to open this home and message the owner ' + S.ARROW + '</span></p></div></a>';
+  }
+  function draw(q){
+    var f = q ? read(q) : {};
+    var list = HOMES.filter(function(h){
+      return (f.beds == null || h.beds === f.beds) && (!f.max || h.ask <= f.max) && (!f.area || h.area.toLowerCase() === f.area) && (!f.type || h.type === f.type) && (!f.status || h.status === f.status);
+    });
+    $('#count').innerHTML = q ? '<b>' + list.length + '</b> of ' + HOMES.length + ' ' + (HOMES.length === 1 ? 'home matches' : 'homes match') + ' your search' : '<b>' + HOMES.length + '</b> ' + (HOMES.length === 1 ? 'home is' : 'homes are') + ' for sale by ' + (HOMES.length === 1 ? 'its owner' : 'their owners') + ' today';
+    $('#clear').hidden = !q;
+    $('#results').innerHTML = list.length ? list.map(card).join('') : '<div class="panel"><div class="empty"><b>No owner listing matches that yet.</b>Try a wider search, or look at the 1,226 new projects.<p style="margin-top:22px"><a class="btn btn-solid" href="projects.html">See new projects</a></p></div></div>';
+  }
+  $('#find').addEventListener('submit', function(e){ e.preventDefault(); draw($('#q').value.trim()); });
+  $('#clear').addEventListener('click', function(){ $('#q').value = ''; draw(''); });
+  draw('');
+})();
+</script>
+</body>
+</html>

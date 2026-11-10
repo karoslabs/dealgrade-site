@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Legal guide · Dealgrade</title>
+<meta name="description" content="Answers on Dubai property law, fees and procedures, and on how Dealgrade works.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#161616">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="site.css">
+</head>
+<body data-page="legal">
+<a class="skip" href="#main">Skip to the page</a>
+<header id="head"></header>
+
+<main id="main">
+<section class="page-top" style="padding-bottom:clamp(56px,8vh,100px)">
+  <div class="wrap">
+    <h1 data-split>Ask about Dubai property law before you sign.</h1>
+    <p class="sub" data-reveal>The guide answers questions on fees and procedures, from buying and selling to off-plan and tenancies. It also explains how Dealgrade's valuations and grades work.</p>
+    <form class="askbox" id="ask" data-reveal>
+      <label class="sr" for="q">Your question</label>
+      <input class="input" id="q" name="question" placeholder="Ask a question" autocomplete="off">
+      <button class="btn btn-solid" type="submit">Ask Dealgrade <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></button>
+    </form>
+    <p class="note" id="askNote" data-reveal>General information, not legal advice. For decisions about a specific property, consult a lawyer or the Dubai Land Department.</p>
+  </div>
+</section>
+
+<section class="sec rule-top">
+  <div class="wrap lg-grid">
+    <div class="lg-copy">
+      <h2 class="h2" data-split>Questions people ask most.</h2>
+      <p class="sub" data-reveal>Pick one to put it in the box, then ask.</p>
+    </div>
+    <div class="lg-qs" id="qs" data-reveal>
+      <button type="button">What fees do I pay when buying a 1.7M apartment?<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h14M12 5l6 6-6 6"/></svg></button>
+      <button type="button">How does buying off-plan work in Dubai?<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h14M12 5l6 6-6 6"/></svg></button>
+      <button type="button">What does a Dealgrade grade mean?<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h14M12 5l6 6-6 6"/></svg></button>
+      <button type="button">How is a valuation worked out?<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h14M12 5l6 6-6 6"/></svg></button>
+      <button type="button">Can foreigners own freehold property, and where?<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h14M12 5l6 6-6 6"/></svg></button>
+      <button type="button">What happens if I buy a home with a tenant in it?<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h14M12 5l6 6-6 6"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<section class="sec light">
+  <div class="wrap">
+    <h2 class="h2" data-split>What forces a sale in Dubai, in plain terms.</h2>
+    <ul class="reasons" data-reveal>
+      <li><b>A lender enforcing</b><p>Under Law No. 14 of 2008 a defaulting borrower is served through the Land Department, and after the cure period the unit can go to court-ordered auction.</p></li>
+      <li><b>An off-plan payment plan</b><p>If the buyer cannot fund the next milestone, the developer can terminate and retain part of what has been paid. The home then transfers as an assignment of the sale agreement, with the developer's consent and fee.</p></li>
+      <li><b>Service charge arrears</b><p>Whatever is outstanding to the owners' association is settled at transfer. Confirm the figure before you agree a price.</p></li>
+    </ul>
+    <p class="sub" data-reveal>Where a mortgage is still on the title, the transfer needs the lender's liability letter, a no-objection certificate and a blocking payment at the trustee office.</p>
+    <div class="cta" data-reveal><a class="btn btn-solid" href="listings.html#distress">About distress sales</a></div>
+  </div>
+</section>
+</main>
+
+<footer id="foot"></footer>
+<script src="site.js"></script>
+<script>
+(function(){
+  var $ = DGS.$, q = $('#q'), note = $('#askNote');
+  var from = new URLSearchParams(location.search).get('q'); if(from) q.value = from;
+  DGS.$$('#qs button').forEach(function(b){ b.addEventListener('click', function(){ q.value = b.textContent.trim(); q.focus(); scrollTo({top:0, behavior:'smooth'}); }); });
+  /* The answers come from Dealgrade's own guide. The question is copied so it can be pasted there. */
+  $('#ask').addEventListener('submit', function(e){
+    e.preventDefault();
+    var v = q.value.trim(); if(!v){ q.focus(); return; }
+    var go = function(){ location.href = 'https://dealgrade.co/legal'; };
+    if(navigator.clipboard) navigator.clipboard.writeText(v).then(go, go); else go();
+    note.textContent = 'Opening the guide on Dealgrade. Your question is copied, ready to paste.';
+  });
+})();
+</script>
+</body>
+</html>

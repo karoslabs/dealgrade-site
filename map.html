@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Map · Dealgrade</title>
+<meta name="description" content="The typical price per square metre in each Dubai community, and the number of registered sales behind each figure.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#161616">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="site.css">
+</head>
+<body data-page="map">
+<a class="skip" href="#main">Skip to the page</a>
+<header id="head" data-solid></header>
+
+<main id="main" class="map-page">
+  <div class="map-side">
+    <div>
+      <h1>Dubai price map</h1>
+      <p class="sub" style="margin-top:12px;font-size:1rem">What homes sell for in each community, from sales registered with the Dubai Land Department.</p>
+    </div>
+    <div class="field"><label for="metric">Colour the map by</label><select class="select" id="metric"><option value="q">Price per square metre</option><option value="s">Sales in the last 12 months</option><option value="yy">Price change in one year</option></select></div>
+    <div><div class="ramp" id="ramp"></div><div class="ramp-l num"><span id="rMin"></span><span id="rMax"></span></div></div>
+    <div class="field"><label for="find">Find a community</label><input class="input" id="find" list="names" placeholder="For example Dubai Marina" autocomplete="off"><datalist id="names"></datalist></div>
+    <div id="detail" aria-live="polite"></div>
+    <p class="note" style="margin-top:auto" id="grey"></p>
+  </div>
+  <div class="map-canvas" id="canvas">
+    <svg id="map" role="img" aria-label="Map of Dubai communities coloured by price"></svg>
+    <div class="tipbox" id="tip"></div>
+    <p class="map-hint">Use two fingers to move the map</p>
+    <div class="zoom"><button type="button" id="zin" aria-label="Zoom in">+</button><button type="button" id="zout" aria-label="Zoom out">−</button></div>
+  </div>
+</main>
+
+<script src="data/map.js"></script>
+<script src="site.js"></script>
+<script>
+(function(){
+  var S = DGS, $ = S.$, esc = S.esc, D = window.DG_MAP, A = D.areas;
+  var svg = $('#map'), tip = $('#tip'), canvas = $('#canvas'), metric = $('#metric'), detail = $('#detail');
+  var RAMP = ['#3d3a70','#5f58a8','#7069cb','#847de1','#9e99ee','#bab6f5','#d9d6fc'];
+  var vb = {x:0, y:0, w:D.w, h:D.h}, sel = null;
+  var setVB = function(){ svg.setAttribute('viewBox', [vb.x, vb.y, vb.w, vb.h].join(' ')); };
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  svg.innerHTML = A.map(function(a, i){ return '<path data-i="' + i + '" d="' + a.d + '"><title>' + esc(a.n) + '</title></path>'; }).join('');
+  var paths = S.$$('path', svg);
+  $('#names').innerHTML = A.map(function(a){ return '<option value="' + esc(a.n) + '">'; }).join('');
+  var fmt = {
+    q: function(v){ return 'AED ' + Math.round(v).toLocaleString('en-US') + ' per sqm'; },
+    s: function(v){ return Math.round(v).toLocaleString('en-US') + ' sales'; },
+    yy: function(v){ return (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v).toFixed(1) + '% in a year'; }
+  };
+  function paint(){
+    var k = metric.value, vals = A.filter(function(a){ return a[k] != null; }).map(function(a){ return a[k]; }).sort(function(x, y){ return x - y; });
+    var lo = vals[0], hi = vals[vals.length - 1];
+    paths.forEach(function(p, i){
+      var v = A[i][k];
+      if(v == null){ p.setAttribute('class', 'na' + (i === sel ? ' sel' : '')); p.style.fill = ''; return; }
+      var c;
+      if(k === 'yy') c = v < -1 ? '#b8624e' : v < 1 ? '#6b6662' : v < 10 ? '#6f66d6' : '#aaa5f1';
+      else { var r = vals.indexOf(v) / Math.max(1, vals.length - 1); c = RAMP[Math.min(6, Math.floor(r * 7))]; }
+      p.setAttribute('class', i === sel ? 'sel' : ''); p.style.fill = c;
+    });
+    $('#ramp').style.background = k === 'yy' ? 'linear-gradient(90deg,#b8624e 0 20%,#6b6662 20% 40%,#6f66d6 40% 70%,#aaa5f1 70%)' : '';
+    $('#rMin').textContent = fmt[k](lo); $('#rMax').textContent = fmt[k](hi);
+    $('#grey').textContent = (A.length - vals.length) + ' of ' + A.length + ' communities have nothing on record for this measure and are drawn grey.';
+    if(sel == null) rank();
+  }
+  function rank(){
+    var k = metric.value, top = A.map(function(a, i){ return [a, i]; }).filter(function(x){ return x[0][k] != null; }).sort(function(x, y){ return y[0][k] - x[0][k]; }).slice(0, 8);
+    detail.innerHTML = '<p class="lab">' + (k === 'q' ? 'Highest price per square metre' : k === 's' ? 'Most sales' : 'Fastest rising') + '</p><div class="rank">' + top.map(function(x){ return '<button type="button" data-i="' + x[1] + '">' + esc(x[0].n) + '<span class="num">' + fmt[k](x[0][k]) + '</span></button>'; }).join('') + '</div>';
+  }
+  function pick(i, zoom){
+    sel = i; var a = A[i];
+    var rows = a.q != null ? [['Price per square metre', 'AED ' + a.q.toLocaleString('en-US')], ['Sales in 12 months', a.s.toLocaleString('en-US')], ['Typical sale price', S.money(a.p)], ['Change in one year', fmt.yy(a.yy).replace(' in a year', '')]] : [];
+    if(a.o) rows.push(['New projects', a.o.pr.toLocaleString('en-US')], ['Homes in them', a.o.u.toLocaleString('en-US')], ['Built so far', a.o.pc + '%']);
+    detail.innerHTML = '<div class="panel" style="padding:20px"><h2 class="h3" style="font-size:1.5rem">' + esc(a.n) + '</h2>' + (a.a && a.a !== a.n ? '<p class="note" style="margin-top:6px">Recorded by the Land Department as ' + esc(a.a) + '</p>' : '')
+      + (rows.length ? '<dl class="kv" style="margin-top:18px">' + rows.map(function(r){ return '<dt>' + r[0] + '</dt><dd class="num">' + esc(r[1]) + '</dd>'; }).join('') + '</dl>' : '<p class="sub" style="font-size:1rem;margin-top:12px">Nothing is on record here for the last 12 months.</p>')
+      + '<div style="display:grid;gap:10px;margin-top:22px">' + (a.a ? '<a class="btn btn-solid btn-sm btn-block" href="valuate.html?area=' + encodeURIComponent(a.a) + '">Value a home here ' + S.ARROW + '</a>' : '') + '<a class="btn btn-line btn-sm btn-block" href="projects.html?q=' + encodeURIComponent(a.n) + '">New projects here</a><button class="btn btn-line btn-sm btn-block" type="button" id="back">Back to the whole city</button></div></div>';
+    if(zoom){ var w = Math.min(D.w, 320); vb = {x:a.x - w / 2, y:a.y - w * D.h / D.w / 2, w:w, h:w * D.h / D.w}; setVB(); }
+    paint();
+    if(matchMedia('(max-width:1000px)').matches) detail.scrollIntoView({behavior:S.reduce ? 'auto' : 'smooth', block:'nearest'});
+  }
+  detail.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    if(b.id === 'back'){ sel = null; vb = {x:0, y:0, w:D.w, h:D.h}; setVB(); paint(); }
+    else if(b.dataset.i) pick(+b.dataset.i, true);
+  });
+  $('#find').addEventListener('change', function(){ var v = this.value.trim().toLowerCase(); A.some(function(a, i){ if(a.n.toLowerCase() === v){ pick(i, true); return true; } }); });
+  metric.addEventListener('change', paint);
+
+  /* hover, drag to move, wheel and buttons to zoom */
+  /* Mouse: drag moves the map and the wheel zooms gently. Touch: one finger scrolls the page as usual, two fingers move
+     and pinch the map, a tap picks a community. The view can never leave the city. */
+  var MINW = 110, MAXW = D.w * 1.15;
+  function clamp(){
+    vb.w = Math.max(MINW, Math.min(MAXW, vb.w)); vb.h = vb.w * D.h / D.w;
+    var cx = Math.max(0, Math.min(D.w, vb.x + vb.w / 2)), cy = Math.max(0, Math.min(D.h, vb.y + vb.h / 2));
+    vb.x = cx - vb.w / 2; vb.y = cy - vb.h / 2; setVB();
+  }
+  function toMap(x, y){ var pt = svg.createSVGPoint(); pt.x = x; pt.y = y; var m = svg.getScreenCTM(); return m ? pt.matrixTransform(m.inverse()) : {x:vb.x + vb.w / 2, y:vb.y + vb.h / 2}; }
+  function unitsPerPx(){ var m = svg.getScreenCTM(); return m && m.a ? 1 / m.a : vb.w / canvas.clientWidth; }
+  function zoom(f, cx, cy){
+    var w = Math.max(MINW, Math.min(MAXW, vb.w * f)), h = w * D.h / D.w;
+    cx = cx == null ? vb.x + vb.w / 2 : cx; cy = cy == null ? vb.y + vb.h / 2 : cy;
+    vb = {x:cx - (cx - vb.x) * w / vb.w, y:cy - (cy - vb.y) * h / vb.h, w:w, h:h}; clamp();
+  }
+  function glideZoom(f){
+    if(S.reduce){ zoom(f); return; }
+    var t0 = performance.now(), done = 0, total = Math.log(f);
+    (function tick(now){ var p = Math.min(1, (now - t0) / 260), e = 1 - Math.pow(1 - p, 3), step = total * e - done; done += step; zoom(Math.exp(step)); if(p < 1) requestAnimationFrame(tick); })(t0);
+  }
+  var pts = {}, drag = null, pinch = null, moved = false;
+  var count = function(){ return Object.keys(pts).length; };
+  svg.addEventListener('pointerdown', function(e){
+    pts[e.pointerId] = {x:e.clientX, y:e.clientY}; moved = false;
+    if(e.pointerType !== 'touch'){ drag = {x:e.clientX, y:e.clientY, vx:vb.x, vy:vb.y, k:unitsPerPx()}; try { svg.setPointerCapture(e.pointerId); } catch(err) {} }
+    else if(count() === 2){ var p = Object.keys(pts).map(function(k){ return pts[k]; }); pinch = {d:Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y), mx:(p[0].x + p[1].x) / 2, my:(p[0].y + p[1].y) / 2}; }
+  });
+  svg.addEventListener('pointermove', function(e){
+    if(pts[e.pointerId]){ pts[e.pointerId] = {x:e.clientX, y:e.clientY}; }
+    if(pinch && count() === 2){
+      var p = Object.keys(pts).map(function(k){ return pts[k]; }), d = Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y), mx = (p[0].x + p[1].x) / 2, my = (p[0].y + p[1].y) / 2, k = unitsPerPx();
+      vb.x -= (mx - pinch.mx) * k; vb.y -= (my - pinch.my) * k;
+      var c = toMap(mx, my); zoom(pinch.d / Math.max(1, d), c.x, c.y);
+      pinch = {d:d, mx:mx, my:my}; moved = true; tip.style.opacity = 0; e.preventDefault(); return;
+    }
+    if(drag){
+      var dx = e.clientX - drag.x, dy = e.clientY - drag.y; if(Math.abs(dx) + Math.abs(dy) > 5) moved = true;
+      if(moved){ vb.x = drag.vx - dx * drag.k; vb.y = drag.vy - dy * drag.k; clamp(); tip.style.opacity = 0; }
+      return;
+    }
+    var path = e.target.closest ? e.target.closest('path') : null;
+    if(!path || e.pointerType === 'touch'){ tip.style.opacity = 0; return; }
+    var r = canvas.getBoundingClientRect(), a = A[+path.dataset.i], k2 = metric.value;
+    tip.innerHTML = '<b>' + esc(a.n) + '</b>' + (a[k2] != null ? fmt[k2](a[k2]) : 'Nothing on record');
+    tip.style.left = (e.clientX - r.left) + 'px'; tip.style.top = (e.clientY - r.top) + 'px'; tip.style.opacity = 1;
+  });
+  var up = function(e){ delete pts[e.pointerId]; drag = null; if(count() < 2) pinch = null; };
+  svg.addEventListener('pointerup', up); svg.addEventListener('pointercancel', up);
+  svg.addEventListener('pointerleave', function(){ tip.style.opacity = 0; });
+  svg.addEventListener('click', function(e){ if(moved){ moved = false; return; } var p = e.target.closest('path'); if(p) pick(+p.dataset.i, false); });
+  /* The wheel zooms by how far it turned, a little at a time, so a trackpad swipe does not jump across the city.
+     Where the page itself scrolls (narrow screens), a plain wheel scrolls the page and only a pinch zooms. */
+  var stacked = matchMedia('(max-width:1000px)');
+  svg.addEventListener('wheel', function(e){
+    if(stacked.matches && !e.ctrlKey) return;
+    e.preventDefault();
+    var dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY, rate = e.ctrlKey ? .01 : .0012;
+    var f = Math.exp(Math.max(-80, Math.min(80, dy)) * rate), c = toMap(e.clientX, e.clientY);
+    zoom(f, c.x, c.y);
+  }, {passive:false});
+  $('#zin').addEventListener('click', function(){ glideZoom(.66); });
+  $('#zout').addEventListener('click', function(){ glideZoom(1.5); });
+  setVB(); paint();
+  var q = new URLSearchParams(location.search).get('c'); if(q) A.some(function(a, i){ if(a.id === q){ pick(i, true); return true; } });
+})();
+</script>
+</body>
+</html>

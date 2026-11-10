@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>New project · Dealgrade</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#161616">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="site.css">
+</head>
+<body data-page="projects">
+<a class="skip" href="#main">Skip to the page</a>
+<header id="head" data-solid></header>
+
+<main id="main">
+<section class="page-top" style="padding-top:calc(var(--head) + 28px);padding-bottom:clamp(64px,9vh,110px)">
+  <div class="wrap" id="page">
+    <a class="back" href="projects.html"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 10H4M9 5l-5 5 5 5"/></svg>New projects</a>
+    <div id="body" style="min-height:60vh"></div>
+  </div>
+</section>
+</main>
+
+<footer id="foot"></footer>
+<script src="site.js"></script>
+<script>
+(function(){
+  var S = DGS, $ = S.$, esc = S.esc, body = $('#body');
+  var id = (new URLSearchParams(location.search).get('id') || '').replace(/[^0-9a-f-]/g, '');
+  function fail(){ body.innerHTML = '<div class="empty"><b>That project could not be found.</b><p style="margin-top:20px"><a class="btn btn-solid" href="projects.html">See all new projects</a></p></div>'; }
+  if(!id){ fail(); return; }
+  fetch('data/p/' + id + '.json').then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(draw).catch(fail);
+
+  function stat(v, l){ return v ? '<div class="stat"><strong class="num">' + esc(v) + '</strong><span>' + l + '</span></div>' : ''; }
+  function kv(rows){ return '<dl class="kv">' + rows.filter(function(r){ return r[1]; }).map(function(r){ return '<dt>' + r[0] + '</dt><dd class="num">' + esc(r[1]) + '</dd>'; }).join('') + '</dl>'; }
+
+  function draw(d){
+    document.title = d.name + ' · Dealgrade';
+    var h = '<div class="pj-head"><div class="pj-title"><h1 data-split>' + esc(d.name) + '</h1><p data-reveal>' + [esc(d.community), esc(d.developerName || d.developer), esc(d.status)].filter(Boolean).join(' · ') + '</p></div></div>';
+
+    var im = d.images || [];
+    if(im.length){
+      var pic = function(u, size, n){ return '<img src="' + esc(u) + '/' + size + '.webp" alt="' + esc(d.name) + ', picture ' + n + '" referrerpolicy="no-referrer" ' + (n > 1 ? 'loading="lazy" ' : '') + 'onerror="this.remove()">'; };
+      h += '<div class="gallery' + (im.length < 3 ? ' one' : '') + '" data-reveal><div>' + pic(im[0], 'big', 1) + '</div>' + (im.length >= 3 ? '<div class="side"><div>' + pic(im[1], 'medium', 2) + '</div><div>' + pic(im[2], 'medium', 3) + '</div></div>' : '') + '</div>';
+    }
+
+    h += '<div class="pj-grid" style="margin-top:clamp(32px,5vw,56px)"><div class="pj-main">';
+
+    /* the grade */
+    if(d.grade){
+      var ask = S.parseMoney(d.asking), est = S.parseMoney(d.estimate), lo = d.range && S.parseMoney(d.range[0]), hi = d.range && S.parseMoney(d.range[1]);
+      var band = '';
+      if(ask && est && lo && hi){
+        var a = Math.min(lo, ask), b = Math.max(hi, ask), pad = (b - a) * .22, min = a - pad, max = b + pad, p = function(v){ return ((v - min) / (max - min) * 100).toFixed(1); };
+        band = '<div class="gb-band" role="img" aria-label="Asking ' + esc(d.asking) + ', likely range ' + esc(d.range[0]) + ' to ' + esc(d.range[1]) + ', estimate ' + esc(d.estimate) + '"><div class="range" style="left:' + p(lo) + '%;width:' + (p(hi) - p(lo)) + '%"></div><div class="est" style="left:' + p(est) + '%"></div><div class="at" style="left:' + p(ask) + '%"></div><div class="tip num" style="left:' + Math.max(12, Math.min(88, p(ask))) + '%">Asking ' + esc(d.asking) + '</div></div>'
+          + '<div class="gb-l num"><span>Likely range ' + esc(d.range[0]) + '</span><span>to ' + esc(d.range[1]) + '</span></div>';
+      }
+      var gap = d.gapPct == null ? 'About the same as the estimate' : Math.abs(d.gapPct).toFixed(1) + '% ' + (d.gapPct > 0 ? 'above' : 'below') + ' the estimate';
+      h += '<section data-reveal><div class="panel"><div class="gb-top"><span class="gb-letter" style="color:var(--g' + d.grade + ')">' + d.grade + '</span><p><b>' + esc(d.label || S.LABELS[d.grade]) + '</b><span>' + esc(d.line || '') + '</span><span>' + esc(d.certainty || '') + '</span></p></div>'
+        + band
+        + '<div class="stats" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr));margin-top:30px;padding-top:26px;border-top:1px solid var(--rule-soft)">' + stat(d.asking, 'asking price') + stat(d.estimate, 'Dealgrade estimate') + '<div class="stat"><strong class="num ' + (d.gapPct > 0 ? 'dn' : d.gapPct < 0 ? 'up' : '') + '" style="font-size:1.35rem;letter-spacing:-.02em;line-height:1.2">' + gap + '</strong></div></div>'
+        + '<div style="margin-top:26px;padding-top:22px;border-top:1px solid var(--rule-soft)">' + kv([['Home graded', d.home], ['Based on', d.basedOn], ['Margin of error', d.margin], ['Market data to', d.dataTo]]) + '</div></div>'
+        + '<p class="note" style="max-width:52em">The grade compares the asking price with the estimate, allowing for how accurate that estimate can be. The home graded is the cheapest one still on sale with an announced price, at the size the developer publishes. Developer prices are current, and registered sales take time to appear.</p></section>';
+    } else {
+      h += '<section data-reveal><div class="panel"><h2 class="h3">This project has no grade.</h2><p class="sub" style="margin-top:12px">Dealgrade grades a project when a home in it is still on sale and its price has been announced. The market figures below still apply.</p></div></section>';
+    }
+
+    /* homes available */
+    if(d.layouts && d.layouts.length){
+      h += '<section data-reveal><h2 class="h3">Homes available</h2><ul class="lay" style="margin-top:20px"><li class="hd"><span>Layout</span><span>Asking price</span><span>Estimated value</span><span>Difference</span><span></span></li>'
+        + d.layouts.map(function(l){
+          return '<li><div><b>' + esc(l.name) + '</b><small>' + [esc(l.status), esc(l.size)].filter(Boolean).join(' · ') + '</small></div><div class="num" data-l="Asking">' + esc(l.asking || '') + '</div><div class="num" data-l="Estimate">' + esc(l.estimate || '') + '</div><div class="num ' + (/dearer/.test(l.diff) ? 'dn' : /cheaper/.test(l.diff) ? 'up' : '') + '">' + esc(/about the same/.test(l.diff || '') ? 'About the same' : (l.diff || '').replace('dearer', 'above').replace('cheaper', 'below').replace(/^[-−+]/, '')) + '</div>' + (l.grade ? '<span class="badge ' + l.grade + '" aria-label="Deal grade ' + l.grade + '">' + l.grade + '</span>' : '<span></span>') + '</li>';
+        }).join('') + '</ul></section>';
+    }
+
+    /* the market around it */
+    var mk = '';
+    if(d.sqft){
+      var v = [['This project, asking price', d.sqft.asking, 'var(--greige)'], ['This project, recent sales', d.sqft.recent, 'var(--indigo-light)'], [esc(d.sqft.areaName) + ', area average', d.sqft.area, 'var(--faint)']].filter(function(x){ return x[1] && x[1] !== '—'; });
+      var mx = Math.max.apply(null, v.map(function(x){ return S.parseMoney(x[1]); }));
+      mk += '<div class="panel"><p class="lab" style="margin-bottom:18px">Price per square foot</p><div class="sq">' + v.map(function(x){ return '<div><span>' + x[0] + '</span><b class="num">' + esc(x[1]) + '</b><i style="--w:' + (S.parseMoney(x[1]) / mx * 100).toFixed(1) + '%;--c:' + x[2] + '"></i></div>'; }).join('') + '</div><p class="note">An area average ignores layout, floor, view and finish. When it disagrees with the grade, the grade is the like-for-like answer.</p></div>';
+    }
+    var facts = stat(d.sales12m, 'sales in this project, past 12 months') + stat(d.salesSinceLaunch, 'sales since launch') + stat(d.register, 'homes on the register') + stat(d.areaSales12m, 'new-build sales in the area, past 12 months') + stat(d.areaChange, 'area price change in one year') + stat(d.resale, 'resale listings on Property Finder') + stat(d.built, 'built to date' + (d.buildStatus ? ' (' + esc(d.buildStatus) + ')' : '')) + stat(d.mostRecentSale, 'most recent sale');
+    if(mk || facts) h += '<section data-reveal><h2 class="h3">The market around it</h2><div style="display:grid;gap:26px;margin-top:20px">' + mk + (facts ? '<div class="facts">' + facts + '</div>' : '') + '</div><p class="note">From the Dubai Land Department\'s records' + (d.dataTo ? ', up to ' + esc(d.dataTo) : '') + '.</p></section>';
+
+    if(d.overview) h += '<section data-reveal><h2 class="h3">About this development</h2><p class="prose" style="margin-top:18px">' + esc(d.overview) + '</p><p class="note">In the developer\'s own words, from Property Finder' + (d.lastChecked ? ', checked ' + esc(d.lastChecked) : '') + '.</p></section>';
+
+    h += '</div><aside class="pj-side" data-reveal style="--d:120ms"><div class="panel">' + kv([['Starting price', d.startingPrice || d.from], ['Bedrooms', d.bedrooms || d.beds], ['Handover', d.completion || d.handover], ['Area', d.area], ['Developer', d.developerName], ['Payment plan', d.paymentPlan], ['Floor plans', d.floorPlans]])
+      + '<div style="display:grid;gap:10px;margin-top:26px"><a class="btn btn-solid btn-block" href="valuate.html' + (d.area ? '?area=' + encodeURIComponent(d.area) : '') + '">Grade a price of your own ' + S.ARROW + '</a><a class="btn btn-line btn-block" href="login.html?next=project">Save this project</a></div></div>'
+      + '<p class="note" style="margin:0">Estimates from registered sales, not a formal valuation. Information only, not financial advice.</p></aside></div>';
+
+    body.innerHTML = h;
+    S.watch(body);
+  }
+})();
+</script>
+</body>
+</html>

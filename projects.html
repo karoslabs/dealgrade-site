@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>New projects · Dealgrade</title>
+<meta name="description" content="1,226 developer projects in Dubai, each priced against what similar homes have sold for. 399 carry a deal grade from A to F.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#161616">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="site.css">
+</head>
+<body data-page="projects">
+<a class="skip" href="#main">Skip to the page</a>
+<header id="head"></header>
+
+<main id="main">
+<section class="page-top" style="padding-bottom:clamp(28px,4vw,44px)">
+  <div class="wrap">
+    <h1 data-split>1,226 new projects, each priced against real sales.</h1>
+    <p class="sub" data-reveal>Every developer project in Dubai is compared with what similar homes have sold for. 399 of them carry a grade, which sets the cheapest home's launch price against Dealgrade's estimate.</p>
+  </div>
+</section>
+
+<div class="bar-top">
+  <form class="wrap filters" id="filters" role="search" aria-label="Filter the projects">
+    <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg><label class="sr" for="q">Search by project, developer or community</label><input class="input" id="q" name="q" type="search" placeholder="Project, developer or community" autocomplete="off"></div>
+    <button class="btn btn-line btn-sm filters-btn" type="button" id="more" aria-expanded="false">Filters</button>
+    <label class="sr" for="beds">Bedrooms</label>
+    <select class="select" id="beds" name="beds"><option value="">Any bedrooms</option><option value="0">Studio</option><option value="1">1 bed</option><option value="2">2 bed</option><option value="3">3 bed</option><option value="4">4 bed</option><option value="5">5 bed or more</option></select>
+    <label class="sr" for="max">Maximum price</label>
+    <select class="select" id="max" name="max"><option value="">Any price</option><option value="1000000">Under 1M</option><option value="2000000">Under 2M</option><option value="5000000">Under 5M</option><option value="10000000">Under 10M</option></select>
+    <label class="sr" for="by">Handover by</label>
+    <select class="select" id="by" name="by"><option value="">Any handover</option><option value="2026">By 2026</option><option value="2027">By 2027</option><option value="2028">By 2028</option><option value="2029">By 2029</option><option value="2030">By 2030</option></select>
+    <label class="sr" for="status">Status</label>
+    <select class="select" id="status" name="status"><option value="">Any status</option><option value="selling">Selling off-plan</option><option value="ready">Ready</option><option value="soldout">Sold out</option></select>
+    <div class="gradepick" role="group" aria-label="Deal grade"><button type="button" data-g="A" aria-pressed="false" aria-label="Grade A">A</button><button type="button" data-g="B" aria-pressed="false" aria-label="Grade B">B</button><button type="button" data-g="C" aria-pressed="false" aria-label="Grade C">C</button><button type="button" data-g="D" aria-pressed="false" aria-label="Grade D">D</button><button type="button" data-g="F" aria-pressed="false" aria-label="Grade F">F</button></div>
+    <label class="check"><input type="checkbox" id="graded" name="graded"> Graded only</label>
+    <label class="sr" for="sort">Sort</label>
+    <select class="select" id="sort" name="sort"><option value="soon">Soonest handover</option><option value="value">Best value first</option><option value="low">Lowest price</option><option value="high">Highest price</option></select>
+  </form>
+</div>
+
+<section style="padding-bottom:clamp(64px,9vh,110px)">
+  <div class="wrap">
+    <div class="count-row"><span id="count" aria-live="polite"></span><button type="button" id="clear" hidden>Clear all filters</button></div>
+    <div class="pgrid" id="grid"></div>
+    <div class="more"><button class="btn btn-line" type="button" id="load">Show more projects</button></div>
+    <p class="note" style="margin-top:40px;max-width:60em">Project details (names, locations, layouts, launch prices and handover dates) are as published on Property Finder's new-projects pages. Valuations are Dealgrade's own, from registered Dubai Land Department sales. They are estimates, not certified valuations.</p>
+  </div>
+</section>
+</main>
+
+<footer id="foot"></footer>
+<script src="data/projects.js"></script>
+<script src="site.js"></script>
+<script>
+(function(){
+  var S = DGS, $ = S.$, $$ = S.$$, esc = S.esc, P = window.DG_PROJECTS || [];
+  var form = $('#filters'), grid = $('#grid'), count = $('#count'), load = $('#load'), clear = $('#clear');
+  var grades = {}, shown = 0, list = [], STEP = 24;
+  var qs = new URLSearchParams(location.search);
+  ['q','beds','max','by','status','sort'].forEach(function(k){ if(qs.get(k)) form.elements[k].value = qs.get(k); });
+  if(qs.get('graded')) $('#graded').checked = true;
+  (qs.get('grade') || '').split('').forEach(function(g){ if('ABCDF'.indexOf(g) >= 0) grades[g] = 1; });
+
+  function card(p){
+    var img = p.i ? '<img src="' + S.PF + esc(p.i) + '/medium.webp" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">' : '';
+    var d = p.dl ? '<span class="' + (/above/.test(p.dl) ? 'dn' : /below/.test(p.dl) ? 'up' : '') + '">' + esc(p.dl) + '</span>' : '';
+    return '<a class="pcard" href="project.html?id=' + p.id + '"><div class="ph">' + img + '<span class="st">' + esc(p.s) + '</span>' + (p.g ? '<span class="badge ' + p.g + '" aria-label="Deal grade ' + p.g + '">' + p.g + '</span>' : '') + '</div>'
+      + '<div class="bd"><h3>' + esc(p.n) + '</h3><p class="pl">' + esc(p.c) + (p.d ? ' · ' + esc(p.d) : '') + '</p><p class="fx">' + [p.h ? 'Handover ' + esc(p.h) : '', esc(p.b)].filter(Boolean).join(' · ') + '</p>'
+      + '<div class="ft2"><div>From<b class="num">' + (esc(p.f) || 'Not announced') + '</b></div>' + (p.e ? '<div class="r">' + esc(p.e.replace(/ est\. .*/, ' estimate')) + '<b class="num">' + esc((/AED [\d.,]+[KMB]?/.exec(p.e) || [''])[0]) + '</b>' + d + '</div>' : '') + '</div></div></a>';
+  }
+  function apply(){
+    var f = form.elements, q = f.q.value.trim().toLowerCase(), beds = f.beds.value, max = +f.max.value, by = +f.by.value, st = f.status.value, graded = $('#graded').checked, gs = Object.keys(grades);
+    list = P.filter(function(p){
+      if(q && (p.n + ' ' + p.c + ' ' + p.d).toLowerCase().indexOf(q) < 0) return false;
+      if(beds !== '' && !(p.bn && (+beds === 5 ? p.bn[1] >= 5 : p.bn[0] <= +beds && +beds <= p.bn[1]))) return false;
+      if(max && !(p.fa && p.fa <= max)) return false;
+      if(by && !(p.hk < 99999 && Math.floor(p.hk / 10) <= by)) return false;
+      if(st === 'selling' && p.s.indexOf('Selling') !== 0) return false;
+      if(st === 'ready' && p.s.indexOf('Ready') < 0) return false;
+      if(st === 'soldout' && p.s.indexOf('Sold out') !== 0) return false;
+      if(graded && !p.g) return false;
+      if(gs.length && !grades[p.g]) return false;
+      return true;
+    });
+    var s = f.sort.value;
+    if(s === 'value') list.sort(function(a, b){ return (a.gp == null) - (b.gp == null) || (a.gp || 0) - (b.gp || 0); });
+    else if(s === 'low') list.sort(function(a, b){ return (a.fa == null) - (b.fa == null) || (a.fa || 0) - (b.fa || 0); });
+    else if(s === 'high') list.sort(function(a, b){ return (b.fa || 0) - (a.fa || 0); });
+    else list.sort(function(a, b){ return (a.s.indexOf('Selling') !== 0) - (b.s.indexOf('Selling') !== 0) || a.hk - b.hk; });
+    var any = q || beds !== '' || max || by || st || graded || gs.length;
+    count.innerHTML = '<b>' + list.length.toLocaleString('en-US') + '</b> ' + (list.length === 1 ? 'project' : 'projects') + (any ? ' match' + (list.length === 1 ? 'es' : '') + ' your filters' : ' in Dubai');
+    clear.hidden = !any;
+    grid.innerHTML = ''; shown = 0; more();
+    if(!list.length) grid.innerHTML = '<div class="empty" style="grid-column:1/-1"><b>No project matches those filters.</b>Remove one to see more.</div>';
+    var u = new URLSearchParams();
+    ['q','beds','max','by','status'].forEach(function(k){ if(f[k].value) u.set(k, f[k].value); });
+    if(s !== 'soon') u.set('sort', s); if(graded) u.set('graded', '1'); if(gs.length) u.set('grade', gs.join(''));
+    history.replaceState(null, '', location.pathname + (u.toString() ? '?' + u : ''));
+    $$('.gradepick button').forEach(function(b){ b.setAttribute('aria-pressed', !!grades[b.dataset.g]); });
+  }
+  function more(){
+    var next = list.slice(shown, shown + STEP);
+    grid.insertAdjacentHTML('beforeend', next.map(card).join(''));
+    shown += next.length;
+    load.hidden = shown >= list.length;
+    load.textContent = 'Show more projects (' + (list.length - shown).toLocaleString('en-US') + ' left)';
+  }
+  /* typing in the search waits a moment before the list redraws, so the cards do not flicker on every letter */
+  var wait = null;
+  form.addEventListener('input', function(e){
+    clearTimeout(wait);
+    if(e.target.id === 'q') wait = setTimeout(apply, 220); else apply();
+  });
+  form.addEventListener('submit', function(e){ e.preventDefault(); });
+  $$('.gradepick button').forEach(function(b){ b.addEventListener('click', function(){ if(grades[b.dataset.g]) delete grades[b.dataset.g]; else grades[b.dataset.g] = 1; apply(); }); });
+  load.addEventListener('click', more);
+  clear.addEventListener('click', function(){ form.reset(); grades = {}; apply(); });
+  $('#more').addEventListener('click', function(){ var o = form.classList.toggle('open'); this.setAttribute('aria-expanded', o); this.textContent = o ? 'Hide filters' : 'Filters'; });
+  apply();
+})();
+</script>
+</body>
+</html>

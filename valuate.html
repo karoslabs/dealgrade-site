@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Valuation · Dealgrade</title>
+<meta name="description" content="Find out what a Dubai home is worth, from the prices similar homes have actually sold for. Add an asking price to see whether it is a good deal.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#161616">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="site.css">
+</head>
+<body data-page="valuate">
+<a class="skip" href="#main">Skip to the page</a>
+<header id="head"></header>
+
+<main id="main">
+<section class="page-top">
+  <div class="wrap">
+    <h1 data-split>Find out what a Dubai home is worth.</h1>
+    <p class="sub" data-reveal>The estimate comes from the prices similar homes have actually sold for. Add an asking price to see whether it is a good deal.</p>
+
+    <div class="val-grid">
+      <form class="val-form panel light" id="form" data-reveal novalidate>
+        <div class="form-grid">
+          <div class="field"><span class="lab" id="lType">Property type</span>
+            <div class="seg" role="radiogroup" aria-labelledby="lType"><label><input type="radio" name="type" value="apartments" checked><span>Apartment</span></label><label><input type="radio" name="type" value="villas"><span>Villa</span></label></div></div>
+          <div class="field"><span class="lab" id="lStatus">Status</span>
+            <div class="seg" role="radiogroup" aria-labelledby="lStatus"><label><input type="radio" name="status" value="Ready" checked><span>Ready</span></label><label><input type="radio" name="status" value="Off-plan"><span>Off-plan</span></label></div></div>
+          <label class="field full"><span>Area</span><input class="input" id="area" name="area" list="areas" placeholder="For example Marsa Dubai" autocomplete="off" required><datalist id="areas"></datalist><small>Pick from the list. Dubai Marina is listed as Marsa Dubai.</small></label>
+          <label class="field"><span>Size in square metres</span><input class="input num" id="sqm" name="sqm" type="number" inputmode="decimal" min="10" max="5000" placeholder="For example 77" required></label>
+          <label class="field"><span>Bedrooms</span><select class="select" id="rooms" name="rooms"><option value="Studio">Studio</option><option value="1 B/R" selected>1 bedroom</option><option value="2 B/R">2 bedrooms</option><option value="3 B/R">3 bedrooms</option><option value="4 B/R">4 bedrooms</option><option value="5 B/R">5 bedrooms or more</option></select></label>
+          <label class="field"><span>Project</span><input class="input" name="project" placeholder="Optional"></label>
+          <label class="field"><span>Building</span><input class="input" name="building" placeholder="Optional"><small>The building matters most. Sales in it are the closest comparison.</small></label>
+          <label class="field full"><span>Asking price in AED</span><input class="input num" name="asking" type="number" inputmode="numeric" min="0" placeholder="Optional, for example 2250000"><small>Add one to get a grade from A to F.</small></label>
+          <label class="check full"><input type="checkbox" name="parking"> Comes with parking</label>
+          <div class="full"><button class="btn btn-solid btn-block" type="submit">Value this home <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></button>
+            <p class="note" id="formNote">No account needed. The more you fill in, the closer the estimate.</p></div>
+        </div>
+      </form>
+
+      <aside class="val-side" data-reveal style="--d:120ms">
+        <div class="panel" aria-live="polite">
+          <h2 class="h3" id="sideTitle">Dubai, all homes</h2>
+          <div class="stats" style="margin-top:24px">
+            <div class="stat"><strong class="num" id="sSqm">AED 18,648</strong><span>median price per square metre</span></div>
+            <div class="stat"><strong class="num" id="sSales">195,311</strong><span>sales in the last 12 months</span></div>
+            <div class="stat"><strong class="num" id="sPrice">AED 1.50M</strong><span>typical sale price</span></div>
+            <div class="stat"><strong class="num" id="sYoy">+0.8%</strong><span>change in one year</span></div>
+          </div>
+          <p class="note">From sales registered with the Dubai Land Department. These are statistics for the area, not a valuation of your home.</p>
+        </div>
+        <div class="panel">
+          <dl class="kv"><dt>Sales behind the model</dt><dd class="num">1.28M</dd><dt>Range on every estimate</dt><dd class="num">80% confidence</dd><dt>Sales data up to</dt><dd>7 July 2026</dd></dl>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <h2 class="h2" data-split>Three steps take you from a home to a grade.</h2>
+    <div class="steps3">
+      <div data-reveal><span class="n">1</span><h3>Describe the home</h3><p>Its area, size and bedrooms. The building name, if you know it, makes the biggest difference.</p></div>
+      <div data-reveal style="--d:100ms"><span class="n">2</span><h3>See what it is worth</h3><p>An estimate with a likely range, worked out from registered sales of similar homes.</p></div>
+      <div data-reveal style="--d:200ms"><span class="n">3</span><h3>Grade a price</h3><p>Add the asking price and get a grade. A is well below what such homes sell for, and F is well above.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec rule-top">
+  <div class="wrap">
+    <h2 class="h2" data-split>The grade says where an asking price sits against real sales.</h2>
+    <p class="sub" data-reveal>It compares the asking price with the estimate and allows for how accurate that estimate can be. A small gap on a precise estimate counts for more than the same gap on a rough one.</p>
+    <div class="scale" data-reveal style="margin-top:clamp(32px,5vw,56px)">
+      <div><b style="color:var(--gA)">A</b><span>Well below market value</span></div>
+      <div><b style="color:var(--gB)">B</b><span>Below market value</span></div>
+      <div><b style="color:var(--gC)">C</b><span>At market value</span></div>
+      <div><b style="color:var(--gD)">D</b><span>Above market value</span></div>
+      <div><b style="color:var(--gF)">F</b><span>Well above market value</span></div>
+    </div>
+    <p class="note">Every grade comes with the estimate, a likely range, the sales it is based on and a margin of error. An estimate from registered sales, not a certified valuation.</p>
+  </div>
+</section>
+</main>
+
+<footer id="foot"></footer>
+<script src="data/market.js"></script>
+<script src="site.js"></script>
+<script>
+(function(){
+  var S = DGS, $ = S.$, M = window.DG_MARKET;
+  var form = $('#form'), area = $('#area'), list = $('#areas'), note = $('#formNote');
+  var kind = function(){ return form.elements.type.value; };
+  function fill(){ list.innerHTML = M[kind()].areas.map(function(a){ return '<option value="' + S.esc(a.n) + '">'; }).join(''); }
+  function side(){
+    var a = M[kind()].areas.filter(function(x){ return x.n.toLowerCase() === area.value.trim().toLowerCase(); })[0];
+    $('#sideTitle').textContent = a ? a.n + ', ' + (kind() === 'villas' ? 'villas' : 'apartments') : 'Dubai, all homes';
+    $('#sSqm').textContent = 'AED ' + (a ? a.q : M.city.sqm).toLocaleString('en-US');
+    $('#sSales').textContent = (a ? a.s : M.city.sales).toLocaleString('en-US');
+    $('#sPrice').textContent = a ? S.money(a.p) : M.city.median;
+    var y = a ? a.y : M.city.yoy, el = $('#sYoy');
+    el.textContent = y == null ? 'n/a' : (y > 0 ? '+' : y < 0 ? '−' : '') + Math.abs(y).toFixed(1) + '%';
+    el.className = 'num ' + (y < 0 ? 'dn' : 'up');
+  }
+  fill(); side();
+  form.addEventListener('change', function(e){ if(e.target.name === 'type'){ fill(); } side(); });
+  area.addEventListener('input', side);
+  /* The valuation itself runs on Dealgrade. The form hands over the three details their page reads from its address. */
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var a = area.value.trim(), sqm = $('#sqm').value;
+    if(!a || !sqm){ note.textContent = 'Add the area and the size to get an estimate.'; (a ? $('#sqm') : area).focus(); return; }
+    location.href = 'https://dealgrade.co/valuate?area=' + encodeURIComponent(a) + '&rooms=' + encodeURIComponent($('#rooms').value) + '&sqm=' + encodeURIComponent(sqm);
+  });
+  var q = new URLSearchParams(location.search).get('area'); if(q){ area.value = q; side(); }
+})();
+</script>
+</body>
+</html>
