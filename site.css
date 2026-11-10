@@ -145,6 +145,12 @@ section{position:relative}
 .handle::after{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--indigo-deep)}
 .bubble{position:absolute;top:0;transform:translateX(-50%);font-size:13px;font-weight:700;white-space:nowrap;background:var(--ink);color:#141414;padding:4px 9px;border-radius:7px}
 .track-wrap{touch-action:pan-y}
+/* The dot, its label and the letter reel move by transform only, each on its own layer, so they glide without the page
+   having to work out its layout again. home.js sets the transforms. */
+.handle{left:0;will-change:transform}
+.bubble{left:0;will-change:transform;transform:translateX(-50%)}
+.reel-col{will-change:transform;transition:transform .62s cubic-bezier(.22,1,.36,1)}
+.verdict .lab,.verdict .gap{font-variant-numeric:tabular-nums}
 .track{cursor:ew-resize}
 .track::before{content:"";position:absolute;inset:-22px 0}
 .handle{cursor:grab;touch-action:none}

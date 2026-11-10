@@ -19,35 +19,64 @@
     $('#range').style.left = pct(LO) + '%'; $('#range').style.width = (pct(HI) - pct(LO)) + '%';
     $('#est').style.left = pct(EST) + '%';
     zones.style.gridTemplateColumns = edges.slice(1).map(function(e, i){ return (pct(e) - pct(edges[i])).toFixed(2) + 'fr'; }).join(' ');
-    var val = ASK, last = -1, auto = null;
+    /* Smoothness. The dot's place is kept as an exact number and moved with a transform, so it travels pixel by pixel on
+       the graphics layer and never forces the page to lay itself out again. Only the words are rounded (to AED 10,000),
+       and they are rewritten only when they change. Everything that moves is drawn once per screen frame. */
+    var pos = ASK, val = ASK, last = -1, auto = null, W = track.clientWidth || 1, lastX = null, lastAsk = '', lastGap = '';
+    function draw(){
+      var x = (pos - MIN) / (MAX - MIN) * W, bx = Math.max(W * .14, Math.min(W * .86, x));
+      if(x === lastX) return; lastX = x;
+      handle.style.transform = 'translate3d(' + x.toFixed(2) + 'px,0,0)';
+      bubble.style.transform = 'translate3d(' + bx.toFixed(2) + 'px,0,0) translateX(-50%)';
+    }
     function set(v){
-      val = Math.max(MIN, Math.min(MAX, Math.round(v / 10000) * 10000));
-      var g = 0; while(g < 4 && val >= CUT[g]) g++;
-      var p = pct(val), d = (val - EST) / EST * 100;
-      handle.style.left = p + '%';
-      bubble.style.left = Math.max(14, Math.min(86, p)) + '%';
-      bubble.textContent = 'Asking ' + money(val);
-      gap.textContent = g === 2 ? 'About the same as the estimate' : Math.abs(d).toFixed(1) + '% ' + (d > 0 ? 'above' : 'below') + ' the estimate';
+      pos = Math.max(MIN, Math.min(MAX, v));
+      val = Math.round(pos / 10000) * 10000;
+      draw();
+      var g = 0; while(g < 4 && pos >= CUT[g]) g++;
+      var ask = 'Asking ' + money(val), changed = ask !== lastAsk || g !== last;
+      if(ask !== lastAsk){ lastAsk = ask; bubble.textContent = ask; }
+      if(changed){
+        var d = (val - EST) / EST * 100, t = g === 2 ? 'About the same as the estimate' : Math.abs(d).toFixed(1) + '% ' + (d > 0 ? 'above' : 'below') + ' the estimate';
+        if(t !== lastGap){ lastGap = t; gap.textContent = t; }
+        handle.setAttribute('aria-valuenow', val);
+        handle.setAttribute('aria-valuetext', money(val) + ', grade ' + L[g]);
+      }
       if(g !== last){
         last = g;
-        reel.style.transform = 'translateY(' + (-g * 20) + '%)';
+        reel.style.transform = 'translate3d(0,' + (-g * 20) + '%,0)';
         lab.textContent = S.LABELS[L[g]];
         zb.forEach(function(b, i){ b.setAttribute('aria-pressed', i === g); });
       }
-      handle.setAttribute('aria-valuenow', val);
-      handle.setAttribute('aria-valuetext', money(val) + ', grade ' + L[g]);
     }
-    function glide(to, dur){
+    var EASE = {
+      inOut: function(p){ return p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; },
+      out: function(p){ return 1 - Math.pow(1 - p, 3); }
+    };
+    function glide(to, dur, ease){
       stop();
-      var from = val, t0 = performance.now();
-      (function tick(now){
-        var p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3.2);
-        set(from + (to - from) * e);
+      var from = pos, t0 = null, f = EASE[ease || 'out'];
+      auto = requestAnimationFrame(function tick(now){
+        if(t0 === null) t0 = now;
+        var p = Math.min(1, (now - t0) / dur);
+        set(from + (to - from) * f(p));
         auto = p < 1 ? requestAnimationFrame(tick) : null;
-      })(t0);
+      });
     }
     function stop(){ if(auto){ cancelAnimationFrame(auto); auto = null; } }
-    function fromX(x){ var r = track.getBoundingClientRect(); set(MIN + (x - r.left) / r.width * (MAX - MIN)); }
+    /* a drag is applied once per frame, however many times the pointer reports in between */
+    var pendingX = null, dragFrame = null;
+    function fromX(x){
+      pendingX = x;
+      if(dragFrame) return;
+      dragFrame = requestAnimationFrame(function(){
+        dragFrame = null;
+        var r = track.getBoundingClientRect(); W = r.width || W;
+        set(MIN + (pendingX - r.left) / W * (MAX - MIN));
+      });
+    }
+    if('ResizeObserver' in window) new ResizeObserver(function(){ W = track.clientWidth || W; lastX = null; draw(); }).observe(track);
+    else addEventListener('resize', function(){ W = track.clientWidth || W; lastX = null; draw(); });
     /* With a mouse, press anywhere on the track and drag. With a finger, only the dot starts a drag, so scrolling the page
        past the card never moves the price by accident. A tap on the track still moves the price there. */
     var down = false, touched = false;
@@ -66,23 +95,33 @@
     track.addEventListener('click', function(e){
       if(e.target === handle || handle.contains(e.target)) return;
       touched = true; var r = track.getBoundingClientRect(), to = MIN + (e.clientX - r.left) / r.width * (MAX - MIN);
-      if(reduce) set(to); else glide(Math.max(MIN, Math.min(MAX, to)), 450);
+      if(reduce) set(to); else glide(Math.max(MIN, Math.min(MAX, to)), 520);
     });
     handle.addEventListener('keydown', function(e){
-      var step = e.shiftKey ? 50000 : 10000, k = e.key;
-      if(k === 'ArrowRight' || k === 'ArrowUp'){ stop(); set(val + step); e.preventDefault(); }
-      else if(k === 'ArrowLeft' || k === 'ArrowDown'){ stop(); set(val - step); e.preventDefault(); }
-      else if(k === 'Home'){ stop(); set(MIN); e.preventDefault(); }
-      else if(k === 'End'){ stop(); set(MAX); e.preventDefault(); }
+      var step = e.shiftKey ? 50000 : 10000, k = e.key, to = null;
+      if(k === 'ArrowRight' || k === 'ArrowUp') to = val + step;
+      else if(k === 'ArrowLeft' || k === 'ArrowDown') to = val - step;
+      else if(k === 'Home') to = MIN;
+      else if(k === 'End') to = MAX;
+      if(to === null) return;
+      e.preventDefault(); touched = true;
+      to = Math.max(MIN, Math.min(MAX, to));
+      if(reduce) set(to); else glide(to, k === 'Home' || k === 'End' ? 520 : 140);
     });
-    /* a letter jumps the price to the middle of that grade (to the real asking price for C) */
-    zb.forEach(function(b, i){ b.addEventListener('click', function(){ touched = true; var to = i === 2 ? ASK : (edges[i] + edges[i + 1]) / 2; if(reduce) set(to); else glide(to, 700); }); });
-    handle.addEventListener('keydown', function(){ touched = true; });
+    /* a letter moves the price to the middle of that grade (to the real asking price for C) */
+    zb.forEach(function(b, i){ b.addEventListener('click', function(){ touched = true; var to = i === 2 ? ASK : (edges[i] + edges[i + 1]) / 2; if(reduce) set(to); else glide(to, 760, 'inOut'); }); });
     if(reduce){ set(ASK); return; }
-    /* opening: the price comes down from far above the range and settles on the real asking price,
-       unless the visitor has already taken hold of it */
+    /* Opening: the price starts far above the range and comes down to the real asking price, slow at both ends. It waits
+       until the card has finished fading in, so the two movements never run on top of each other, and it does not start
+       at all if the visitor has already taken hold of the dot. */
     set(2380000);
-    setTimeout(function(){ if(!touched) glide(ASK, 2400); }, 900);
+    var open = function(){ if(!touched) glide(ASK, 2300, 'inOut'); };
+    var card = wrap.closest('[data-reveal]');
+    if(card){
+      var started = false, go = function(){ if(started) return; started = true; setTimeout(open, 250); };
+      card.addEventListener('transitionend', function(e){ if(e.target === card && e.propertyName === 'opacity') go(); });
+      setTimeout(go, 1800);
+    } else setTimeout(open, 900);
   })();
 
   /* how a grade is worked out: on a laptop the sheet follows the step in view */
