@@ -1,15 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Dealgrade">
-  <!--
-    The Dealgrade mark: the wordmark's own letter — Arial Bold "D", the app's
-    typeface — in white on the brand's slate indigo (the `palette-indigo-deep` token).
-
-    The path is the glyph's outline, not live text, so it looks the same
-    wherever it is shown; the raster icons (favicon.ico, apple-icon.png,
-    public/icon-*.png) are drawn from the same glyph at the same proportions.
-
-    Colours are literals, not currentColor: a favicon renders outside the
-    document, where no stylesheet and no cascade have reached it.
-  -->
-  <rect width="64" height="64" rx="14" fill="#4a5099"/>
-  <path fill="#ffffff" transform="matrix(0.023192 0 0 -0.023192 14.3158 49.0000)" d="M148 1466H689Q872 1466 968 1438Q1097 1400 1189.0 1303.0Q1281 1206 1329.0 1065.5Q1377 925 1377 719Q1377 538 1332 407Q1277 247 1175 148Q1098 73 967 31Q869 0 705 0H148ZM444 1218V247H665Q789 247 844 261Q916 279 963.5 322.0Q1011 365 1041.0 463.5Q1071 562 1071 732Q1071 902 1041.0 993.0Q1011 1084 957.0 1135.0Q903 1186 820 1204Q758 1218 577 1218Z"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Dealgrade"><rect width="64" height="64" rx="14" fill="#4a5099"/><path fill="#ffffff" transform="translate(17.443 49.420) scale(0.02416 -0.02416)" d="M1121 0H860V156Q795 65 706.5 20.5Q618 -24 528 -24Q345 -24 214.5 123.5Q84 271 84 535Q84 805 211.0 945.5Q338 1086 532 1086Q710 1086 840 938V1466H1121ZM371 554Q371 384 418 308Q486 198 608 198Q705 198 773.0 280.5Q841 363 841 527Q841 710 775.0 790.5Q709 871 606 871Q506 871 438.5 791.5Q371 712 371 554Z"/></svg>

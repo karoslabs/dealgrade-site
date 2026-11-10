@@ -38,7 +38,7 @@
   var head = $('#head');
   if(head){
     head.className = 'head' + (head.dataset.solid != null ? ' solid' : '');
-    head.innerHTML = (PREVIEW ? STRIP : '') + '<div class="wrap"><a class="brand" href="index.html"><img src="assets/icon.svg" alt="" width="30" height="30">Dealgrade</a>'
+    head.innerHTML = (PREVIEW ? STRIP : '') + '<div class="wrap"><a class="brand" href="index.html" aria-label="Dealgrade, home"><span class="wm"></span></a>'
       + '<nav class="nav" aria-label="Dealgrade">' + NAV.map(function(n){ return '<a href="' + n[1] + '"' + (n[0] === page ? ' aria-current="page"' : '') + '>' + n[2] + '</a>'; }).join('') + '</nav>'
       + '<div class="head-r"><a class="signin" href="login.html">Sign in</a><a class="btn btn-solid btn-sm" href="valuate.html">Value my property</a>'
       + '<button class="burger" type="button" aria-label="Open the menu" aria-expanded="false" aria-controls="menu"><span><i></i><i></i></span></button></div></div>';
@@ -61,7 +61,7 @@
   }
   var foot = $('#foot');
   if(foot){
-    foot.innerHTML = '<div class="wrap"><div class="ft"><a class="brand" href="index.html"><img src="assets/icon.svg" alt="" width="30" height="30">Dealgrade</a>'
+    foot.innerHTML = '<div class="wrap"><div class="ft"><a class="brand" href="index.html" aria-label="Dealgrade, home"><span class="wm"></span></a>'
       + '<nav aria-label="All pages"><a href="valuate.html">Valuation</a><a href="listings.html">Listings</a><a href="projects.html">New projects</a><a href="listings.html#distress">Distress sales</a><a href="login.html?next=sell">List a property</a><a href="map.html">Map</a><a href="prices.html">Prices</a><a href="legal.html">Legal guide</a><a href="login.html">Sign in</a><a href="signup.html">Create your account</a></nav></div>'
       + '<p class="fine">Statistical estimates from Dubai Land Department transactions, not a certified valuation. Sales data runs to 7 July 2026. Project details are as published on Property Finder\'s new-projects pages, and the valuations are Dealgrade\'s own.</p>'
       + '<p class="fine">© Dealgrade 2026 · Dubai, UAE</p></div>';

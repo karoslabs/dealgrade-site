@@ -57,8 +57,12 @@ button{cursor:pointer;border:0;background:none;padding:0}
 .head{position:fixed;inset:0 0 auto 0;z-index:50;border-bottom:1px solid transparent;transition:background .3s,border-color .3s}
 .head.scrolled,.head.solid{background:rgba(22,22,22,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--rule-soft)}
 .head .wrap{display:flex;align-items:center;justify-content:space-between;height:var(--row);gap:20px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;letter-spacing:-.02em;flex:none}
-.brand img{width:30px;height:30px;border-radius:7px}
+/* The logo: "dealgrade" in lowercase Arial Bold, set tight, with no tile and no dot. It is one outlined file
+   (assets/wordmark.svg) used as a mask, so it takes the colour of the text around it and looks the same on every device. */
+.brand{display:flex;align-items:center;flex:none;color:var(--ink)}
+.brand .wm{display:block;height:23px;aspect-ratio:8787/1913;background:currentColor;-webkit-mask:url(assets/wordmark.svg) center/contain no-repeat;mask:url(assets/wordmark.svg) center/contain no-repeat;transform:translateY(1px)}
+footer .brand .wm{height:20px}
+.auth-brand .brand .wm{height:25px}
 .nav{display:flex;align-items:center;gap:clamp(16px,2vw,30px);font-size:15px;color:var(--body)}
 .nav a{padding:6px 0;border-bottom:1px solid transparent;transition:color .2s}
 .nav a:hover{color:var(--ink)}
