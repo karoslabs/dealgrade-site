@@ -66,9 +66,11 @@
       h += '<section data-reveal><div class="panel"><h2 class="h3">This project has no grade.</h2><p class="sub" style="margin-top:12px">Dealgrade grades a project when a home in it is still on sale and its price has been announced. The market figures below still apply.</p></div></section>';
     }
 
+    /* The grade is open to everyone. Each layout and the market around the project open with a free account. */
+    var deep = '';
     /* homes available */
     if(d.layouts && d.layouts.length){
-      h += '<section data-reveal><h2 class="h3">Homes available</h2><ul class="lay" style="margin-top:20px"><li class="hd"><span>Layout</span><span>Asking price</span><span>Estimated value</span><span>Difference</span><span></span></li>'
+      deep += '<section data-reveal><h2 class="h3">Homes available</h2><ul class="lay" style="margin-top:20px"><li class="hd"><span>Layout</span><span>Asking price</span><span>Estimated value</span><span>Difference</span><span></span></li>'
         + d.layouts.map(function(l){
           return '<li><div><b>' + esc(l.name) + '</b><small>' + [esc(l.status), esc(l.size)].filter(Boolean).join(' · ') + '</small></div><div class="num" data-l="Asking">' + esc(l.asking || '') + '</div><div class="num" data-l="Estimate">' + esc(l.estimate || '') + '</div><div class="num ' + (/dearer/.test(l.diff) ? 'dn' : /cheaper/.test(l.diff) ? 'up' : '') + '">' + esc(/about the same/.test(l.diff || '') ? 'About the same' : (l.diff || '').replace('dearer', 'above').replace('cheaper', 'below').replace(/^[-−+]/, '')) + '</div>' + (l.grade ? '<span class="badge ' + l.grade + '" aria-label="Deal grade ' + l.grade + '">' + l.grade + '</span>' : '<span></span>') + '</li>';
         }).join('') + '</ul></section>';
@@ -82,12 +84,22 @@
       mk += '<div class="panel"><p class="lab" style="margin-bottom:18px">Price per square foot</p><div class="sq">' + v.map(function(x){ return '<div><span>' + x[0] + '</span><b class="num">' + esc(x[1]) + '</b><i style="--w:' + (S.parseMoney(x[1]) / mx * 100).toFixed(1) + '%;--c:' + x[2] + '"></i></div>'; }).join('') + '</div><p class="note">An area average ignores layout, floor, view and finish. When it disagrees with the grade, the grade is the like-for-like answer.</p></div>';
     }
     var facts = stat(d.sales12m, 'sales in this project, past 12 months') + stat(d.salesSinceLaunch, 'sales since launch') + stat(d.register, 'homes on the register') + stat(d.areaSales12m, 'new-build sales in the area, past 12 months') + stat(d.areaChange, 'area price change in one year') + stat(d.resale, 'resale listings on Property Finder') + stat(d.built, 'built to date' + (d.buildStatus ? ' (' + esc(d.buildStatus) + ')' : '')) + stat(d.mostRecentSale, 'most recent sale');
-    if(mk || facts) h += '<section data-reveal><h2 class="h3">The market around it</h2><div style="display:grid;gap:26px;margin-top:20px">' + mk + (facts ? '<div class="facts">' + facts + '</div>' : '') + '</div><p class="note">From the Dubai Land Department\'s records' + (d.dataTo ? ', up to ' + esc(d.dataTo) : '') + '.</p></section>';
+    if(mk || facts) deep += '<section data-reveal><h2 class="h3">The market around it</h2><div style="display:grid;gap:26px;margin-top:20px">' + mk + (facts ? '<div class="facts">' + facts + '</div>' : '') + '</div><p class="note">From the Dubai Land Department\'s records' + (d.dataTo ? ', up to ' + esc(d.dataTo) : '') + '.</p></section>';
+
+    if(S.member) h += deep;
+    else if(deep){
+      var n = (d.layouts || []).length, parts = [];
+      if(n) parts.push((n === 1 ? 'the layout' : 'each of the ' + n + ' layouts') + ' priced against its estimate');
+      if(d.sqft) parts.push('the price per square foot against the area');
+      if(facts) parts.push('the sales in the project and around it');
+      var line = parts.length > 1 ? parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1] : parts[0];
+      h += '<section data-reveal>' + S.door({title: n ? 'See every layout and the market around it.' : 'See the market around this project.', line: line.charAt(0).toUpperCase() + line.slice(1) + '.', next: 'project'}) + '</section>';
+    }
 
     if(d.overview) h += '<section data-reveal><h2 class="h3">About this development</h2><p class="prose" style="margin-top:18px">' + esc(d.overview) + '</p><p class="note">In the developer\'s own words, from Property Finder' + (d.lastChecked ? ', checked ' + esc(d.lastChecked) : '') + '.</p></section>';
 
     h += '</div><aside class="pj-side" data-reveal style="--d:120ms"><div class="panel">' + kv([['Starting price', d.startingPrice || d.from], ['Bedrooms', d.bedrooms || d.beds], ['Handover', d.completion || d.handover], ['Area', d.area], ['Developer', d.developerName], ['Payment plan', d.paymentPlan], ['Floor plans', d.floorPlans]])
-      + '<div style="display:grid;gap:10px;margin-top:26px"><a class="btn btn-solid btn-block" href="valuate.html' + (d.area ? '?area=' + encodeURIComponent(d.area) : '') + '">Grade a price of your own ' + S.ARROW + '</a><a class="btn btn-line btn-block" href="login.html?next=project">Save this project</a></div></div>'
+      + '<div style="display:grid;gap:10px;margin-top:26px"><a class="btn btn-solid btn-block" data-ev="value_home" data-at="project" href="valuate.html' + (d.area ? '?area=' + encodeURIComponent(d.area) : '') + '">Value a home in this area ' + S.ARROW + '</a></div></div>'
       + '<p class="note" style="margin:0">Estimates from registered sales, not a formal valuation. Information only, not financial advice.</p></aside></div>';
 
     body.innerHTML = h;

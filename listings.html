@@ -34,7 +34,7 @@
 
 <section class="sec-tight">
   <div class="wrap duo">
-    <a class="panel" href="login.html?next=sell" data-reveal>
+    <a class="panel" href="signup.html?next=sell" data-ev="list_my_home" data-at="listings" data-reveal>
       <h2 class="h3">Selling your own home?</h2>
       <p class="sub" style="margin-top:14px">List it yourself and talk to buyers directly. Your listing shows its estimate beside your asking price.</p>
       <p style="margin-top:26px"><span class="link">List a property <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></p>
@@ -53,7 +53,7 @@
       <h2 class="h2" data-split>Distress sales are listed apart, for members.</h2>
       <p class="sub" data-reveal>These are owners who have told Dealgrade they need to complete by a date, with the reason and the date they gave. Each one is priced against Dealgrade's own valuation, so you can see whether the urgency is in the asking price or only in the wording.</p>
       <p class="sub" data-reveal>Every row is a statement someone made about their own finances, so it is not on a page anyone can open.</p>
-      <div class="cta" data-reveal><a class="btn btn-solid" href="login.html?next=distress">Sign in to see them</a><a class="btn btn-line" href="signup.html">Create your account</a></div>
+      <div class="door-wrap" id="distressDoor" data-reveal></div>
     </div>
     <div style="grid-column:1/-1" data-reveal>
       <h3 class="h3" style="margin-top:clamp(20px,3vw,40px)">What actually forces a sale in Dubai</h3>
@@ -91,9 +91,9 @@
     return f;
   }
   function card(h){
-    return '<a class="feature" href="login.html?next=listing"><div class="info" style="grid-column:1/-1"><div class="top"><div><h2 class="h3">' + esc(h.title) + '</h2><p class="sub" style="margin-top:8px">' + esc(h.also) + ' (' + esc(h.area) + ') · ' + h.sqm + ' sqm · ' + (h.beds ? h.beds + ' bedrooms' : 'Studio') + ' · ' + esc(h.status) + '</p></div><span class="badge ' + h.grade + '" aria-label="Deal grade ' + h.grade + '">' + h.grade + '</span></div>'
+    return '<a class="feature" href="signup.html?next=listing" data-ev="open_owner_home"><div class="info" style="grid-column:1/-1"><div class="top"><div><h2 class="h3">' + esc(h.title) + '</h2><p class="sub" style="margin-top:8px">' + esc(h.also) + ' (' + esc(h.area) + ') · ' + h.sqm + ' sqm · ' + (h.beds ? h.beds + ' bedrooms' : 'Studio') + ' · ' + esc(h.status) + '</p></div><span class="badge ' + h.grade + '" aria-label="Deal grade ' + h.grade + '">' + h.grade + '</span></div>'
       + '<div class="stats" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border-top:1px solid var(--rule);padding-top:22px"><div class="stat"><strong class="num">' + S.money(h.ask) + '</strong><span>asking price</span></div><div class="stat"><strong class="num">' + S.money(h.est) + '</strong><span>Dealgrade estimate</span></div><div class="stat"><strong>' + esc(S.LABELS[h.grade]) + '</strong><span>' + esc(h.delta) + ' as the estimate</span></div></div>'
-      + '<p><span class="link">Sign in to open this home and message the owner ' + S.ARROW + '</span></p></div></a>';
+      + '<p><span class="link">Open this home and message the owner, with a free account ' + S.ARROW + '</span></p></div></a>';
   }
   function draw(q){
     var f = q ? read(q) : {};
@@ -107,6 +107,10 @@
   $('#find').addEventListener('submit', function(e){ e.preventDefault(); draw($('#q').value.trim()); });
   $('#clear').addEventListener('click', function(){ $('#q').value = ''; draw(''); });
   draw('');
+  /* distress sales: the door for a visitor; a member sees them here on the live site */
+  var dd = $('#distressDoor');
+  dd.innerHTML = S.member ? '<div class="panel white"><p><b>You are in.</b> On the live site the distress sales are listed here.</p></div>' : S.door({title: 'See them with a free account.', next: 'distress'});
+  S.watch(dd);
 })();
 </script>
 </body>

@@ -24,9 +24,10 @@
       <h1 data-split>Know what a Dubai home is <mark>worth</mark> before you deal.</h1>
       <p class="lede" data-reveal style="--d:450ms">Dealgrade prices any home from 1.28M registered sales and grades the asking price from A to F.</p>
       <div class="cta" data-reveal style="--d:560ms" id="heroCta">
-        <a class="btn btn-solid" href="valuate.html">Value my property <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></a>
-        <a class="btn btn-line" href="listings.html">Browse the marketplace</a>
+        <a class="btn btn-solid" href="valuate.html" data-ev="value_home" data-at="hero">Value a home <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></a>
+        <a class="btn btn-line" href="listings.html" data-ev="browse_marketplace" data-at="hero">Browse the marketplace</a>
       </div>
+      <p class="cta-note" data-reveal style="--d:640ms">Free account. No phone number asked.</p>
     </div>
 
     <div class="hero-tool" data-reveal style="--d:300ms">
@@ -58,46 +59,36 @@
 
 <section class="proof" aria-label="The numbers behind every estimate">
   <div class="wrap">
-    <div data-reveal><strong class="num" data-count="1.28" data-dec="2" data-suffix="M">1.28M</strong><p>registered Dubai sales behind the model, cleaned and deduplicated</p></div>
-    <div data-reveal style="--d:90ms"><strong class="num" data-count="80" data-suffix="%">80%</strong><p>confidence range on every estimate, never a bare midpoint</p></div>
-    <div data-reveal style="--d:180ms"><strong class="num" data-count="195311" data-sep="1">195,311</strong><p>sales priced in the last twelve months</p></div>
-    <div data-reveal style="--d:270ms"><strong class="num" data-count="530.6" data-dec="1" data-prefix="AED " data-suffix="B">AED 530.6B</strong><p>transacted in twelve months, from Dubai Land Department records</p></div>
+    <div data-reveal><strong class="num">1.28M</strong><p>registered Dubai sales in the model</p></div>
+    <div data-reveal style="--d:90ms"><strong class="num">80%</strong><p>confidence range on each estimate</p></div>
+    <div data-reveal style="--d:180ms"><strong class="num">195,311</strong><p>sales in the last twelve months</p></div>
+    <div data-reveal style="--d:270ms"><strong class="num">AED 530.6B</strong><p>sold in those twelve months</p></div>
   </div>
 </section>
 
-<section class="sec" id="grade">
-  <div class="wrap">
-    <h2 class="h2" data-split>A few details about the home are enough to grade the price.</h2>
-    <p class="sub" data-reveal>The estimate is worked out from registered sales of similar homes. Only sales completed before the valuation date are used.</p>
-    <div class="how-grid">
-      <div class="how-steps">
-        <div class="step on" data-step="1"><span class="n">1</span><h3>Describe the home</h3><p>Its area, size and bedrooms. The building name, if you know it, makes the biggest difference, because sales in the same building are the closest comparison.</p>
-          <div class="step-vis"><dl class="rows"><dt>Area</dt><dd>Al Barsha First</dd><dt>Size</dt><dd class="num">93 sqm</dd><dt>Bedrooms</dt><dd>1 bedroom</dd><dt>Status</dt><dd>Off-plan</dd></dl></div>
+<section class="sec" id="check">
+  <div class="wrap chk-grid">
+    <div class="chk-copy">
+      <h2 class="h2" data-split>Is that distress deal really below market?</h2>
+      <p class="sub" data-reveal>Enter the home and the price from the message you were sent. Dealgrade compares it with registered sales of similar homes, so you know before you call back.</p>
+      <p data-reveal style="margin-top:30px"><a class="btn btn-solid" href="valuate.html?from=distress" data-ev="check_deal" data-at="check">Check a deal <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></a></p>
+    </div>
+    <div class="chk-vis" data-reveal style="--d:120ms">
+      <figure class="msg" aria-label="An example of a message offering a distress deal"><p><b>Distress deal.</b> 1 bed in Al Barsha, 93 sqm, AED 1.80M. Well below market, the owner must sell this week.</p></figure>
+      <div class="sheet" aria-label="What Dealgrade says about this home at this price">
+        <div class="grp">
+          <dl class="rows"><dt>Area</dt><dd>Al Barsha First</dd><dt>Home</dt><dd class="num">1 bedroom, 93 sqm</dd><dt>Asking price</dt><dd class="num">AED 1.80M</dd></dl>
         </div>
-        <div class="step" data-step="2"><span class="n">2</span><h3>See what it is worth</h3><p>You get an estimate with a likely range, priced by the square metre from registered sales of similar homes.</p>
-          <div class="step-vis"><div class="worth"><strong class="num">AED 1.77M</strong><span>estimated value, from 47 recent sales</span></div><div class="mini"><i></i><b></b></div><div class="mini-l num"><span>Likely range AED 1.67M</span><span>to AED 2.04M</span></div></div>
+        <div class="grp">
+          <div class="worth"><strong class="num">AED 1.77M</strong><span>estimated value, from 47 recent sales</span></div>
+          <div class="mini"><i></i><b></b></div>
+          <div class="mini-l num"><span>Likely range AED 1.67M</span><span>to AED 2.04M</span></div>
         </div>
-        <div class="step" data-step="3"><span class="n">3</span><h3>Grade a price</h3><p>Add the asking price and get a grade from A to F. A is well below what such homes sell for. F is well above.</p>
-          <div class="step-vis"><div class="gradeline"><span class="big">C</span><p><b>At market value</b>An asking price of AED 1.80M is about the same as the estimate.</p></div></div>
-          <p style="margin-top:26px"><a class="link" href="valuate.html">Grade a price now <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></a></p></div>
-      </div>
-      <div class="how-sheet">
-        <div class="sheet-stick">
-          <div class="sheet" id="sheet" data-step="1" aria-label="A real valuation from Dealgrade">
-            <div class="grp g1">
-              <dl class="rows"><dt>Area</dt><dd>Al Barsha First</dd><dt>Size</dt><dd class="num">93 sqm</dd><dt>Bedrooms</dt><dd>1 bedroom</dd><dt>Status</dt><dd>Off-plan</dd></dl>
-            </div>
-            <div class="grp g2">
-              <div class="worth"><strong class="num">AED 1.77M</strong><span>estimated value, from 47 recent sales</span></div>
-              <div class="mini"><i></i><b></b></div>
-              <div class="mini-l num"><span>Likely range AED 1.67M</span><span>to AED 2.04M</span></div>
-            </div>
-            <div class="grp g3">
-              <div class="gradeline"><span class="big">C</span><p><b>At market value</b>An asking price of AED 1.80M is about the same as the estimate, within a margin of about 10% either way.</p></div>
-            </div>
-          </div>
+        <div class="grp">
+          <div class="gradeline"><span class="big">C</span><p><b>At market value</b>An asking price of AED 1.80M is about the same as the estimate.</p></div>
         </div>
       </div>
+      <p class="note">The message is an example. The estimate and the grade are Dealgrade's real ones for this home at this price.</p>
     </div>
   </div>
 </section>
@@ -109,10 +100,10 @@
         <h2 class="h2" data-split>Owners and buyers deal directly, and every price is already graded.</h2>
         <p class="sub" data-reveal>There are no brokers on Dealgrade and no commission. Each home and each new project is priced against registered sales, so you see the grade before you make an offer.</p>
         <div class="ways" data-reveal>
-          <a class="way" href="listings.html"><h3>Homes for sale by their owners</h3><p>Each one shows its estimate next to the asking price.</p><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 14h18M15 6l8 8-8 8"/></svg></a>
-          <a class="way" href="projects.html"><h3>1,226 new projects from developers</h3><p>Each is priced against what similar homes sold for, and 399 carry a grade.</p><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 14h18M15 6l8 8-8 8"/></svg></a>
-          <a class="way" href="listings.html#distress"><h3>Distress sales, for members</h3><p>Owners who need to complete by a date. Each is priced against Dealgrade's own valuation, so you can see whether the urgency is in the price or only in the wording.</p><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 14h18M15 6l8 8-8 8"/></svg></a>
-          <a class="way" href="login.html?next=sell"><h3>Selling your own home</h3><p>List it yourself and talk to buyers directly.</p><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 14h18M15 6l8 8-8 8"/></svg></a>
+          <a class="way" href="listings.html" data-ev="open_owner_homes"><h3>Homes for sale by their owners</h3><p>Each one shows its estimate next to the asking price.</p><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 14h18M15 6l8 8-8 8"/></svg></a>
+          <a class="way" href="projects.html" data-ev="open_new_projects"><h3>1,226 new projects from developers</h3><p>Each is priced against what similar homes sold for, and 399 carry a grade.</p><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 14h18M15 6l8 8-8 8"/></svg></a>
+          <a class="way" href="signup.html?next=distress" data-ev="open_distress_sales"><h3>Distress sales, for members</h3><p>Owners who need to complete by a date. Each is priced against Dealgrade's own valuation, so you can see whether the urgency is in the price or only in the wording.</p><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 14h18M15 6l8 8-8 8"/></svg></a>
+          <a class="way" href="signup.html?next=sell" data-ev="list_my_home"><h3>Selling your own home</h3><p>List it yourself and talk to buyers directly.</p><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 14h18M15 6l8 8-8 8"/></svg></a>
         </div>
       </div>
       <div class="mk-wall" id="wall" aria-label="New projects on Dealgrade with their grades" data-reveal></div>
@@ -122,7 +113,7 @@
       <div class="ask-copy" data-reveal>
         <h3>Search the way you would ask an agent.</h3>
         <p>Say where you want to live and what you can spend. Dealgrade sets the filters for you, and you can change any of them.</p>
-        <p style="margin-top:24px"><a class="btn btn-solid" href="listings.html">Browse the marketplace <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></a></p>
+        <p style="margin-top:24px"><a class="btn btn-solid" href="listings.html" data-ev="browse_marketplace" data-at="search">Browse the marketplace <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></a></p>
       </div>
       <div class="ask-ui" id="ask" data-reveal style="--d:120ms">
         <div class="q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg><span><span id="typed">Two bed in Dubai Marina under 3M</span><span class="caret" aria-hidden="true"></span></span></div>
@@ -137,7 +128,7 @@
     <div class="dist-copy">
       <h2 class="h2" data-split>Half of the graded new projects ask more than similar homes sold for.</h2>
       <p class="sub" data-reveal>Dealgrade compares each project's launch price with its own estimate. A small gap on a precise estimate counts for more than the same gap on a rough one.</p>
-      <p data-reveal style="margin-top:30px"><a class="btn btn-solid" href="projects.html?graded=1">See the graded projects <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></a></p>
+      <p data-reveal style="margin-top:30px"><a class="btn btn-solid" href="projects.html?graded=1" data-ev="see_graded_projects">See the graded projects <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></a></p>
     </div>
     <div class="dist-chart" id="dist" data-reveal></div>
   </div>
@@ -158,7 +149,7 @@
           <thead><tr><th scope="col">Area</th><th scope="col">Sales</th><th scope="col">Per sqm</th><th scope="col">Typical</th><th scope="col">1 year</th></tr></thead>
           <tbody id="areas"></tbody>
         </table>
-        <div class="px-links"><a class="link" href="map.html">Open the price map <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></a><a class="link" href="prices.html">See all 60 areas <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></a></div>
+        <div class="px-links"><a class="link" href="map.html" data-ev="open_price_map">Open the price map <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></a><a class="link" href="prices.html" data-ev="open_all_areas">See all 60 areas <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></a></div>
       </div>
     </div>
   </div>
@@ -171,10 +162,10 @@
       <p class="sub" data-reveal>It answers questions on Dubai property law and fees, and on how Dealgrade works. It is general information, not legal advice.</p>
     </div>
     <div class="lg-qs" data-reveal>
-      <a href="legal.html?q=What%20fees%20do%20I%20pay%20when%20buying%20a%201.7M%20apartment%3F">What fees do I pay when buying a 1.7M apartment?<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h14M12 5l6 6-6 6"/></svg></a>
-      <a href="legal.html?q=How%20does%20buying%20off-plan%20work%20in%20Dubai%3F">How does buying off-plan work in Dubai?<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h14M12 5l6 6-6 6"/></svg></a>
-      <a href="legal.html?q=Can%20foreigners%20own%20freehold%20property%2C%20and%20where%3F">Can foreigners own freehold property, and where?<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h14M12 5l6 6-6 6"/></svg></a>
-      <a href="legal.html?q=What%20happens%20if%20I%20buy%20a%20home%20with%20a%20tenant%20in%20it%3F">What happens if I buy a home with a tenant in it?<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h14M12 5l6 6-6 6"/></svg></a>
+      <a data-ev="ask_legal_guide" href="legal.html?q=What%20fees%20do%20I%20pay%20when%20buying%20a%201.7M%20apartment%3F">What fees do I pay when buying a 1.7M apartment?<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h14M12 5l6 6-6 6"/></svg></a>
+      <a data-ev="ask_legal_guide" href="legal.html?q=How%20does%20buying%20off-plan%20work%20in%20Dubai%3F">How does buying off-plan work in Dubai?<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h14M12 5l6 6-6 6"/></svg></a>
+      <a data-ev="ask_legal_guide" href="legal.html?q=Can%20foreigners%20own%20freehold%20property%2C%20and%20where%3F">Can foreigners own freehold property, and where?<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h14M12 5l6 6-6 6"/></svg></a>
+      <a data-ev="ask_legal_guide" href="legal.html?q=What%20happens%20if%20I%20buy%20a%20home%20with%20a%20tenant%20in%20it%3F">What happens if I buy a home with a tenant in it?<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h14M12 5l6 6-6 6"/></svg></a>
     </div>
   </div>
 </section>
@@ -184,15 +175,15 @@
   <div class="wrap">
     <h2 class="h2" data-split>Find out what the home is worth before you agree a price.</h2>
     <div class="cta" data-reveal>
-      <a class="btn btn-solid" href="valuate.html">Value my property <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></a>
-      <a class="btn btn-line" href="signup.html">Create your account</a>
+      <a class="btn btn-solid" href="valuate.html" data-ev="value_home" data-at="close">Value a home <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></a>
+      <a class="btn btn-line" href="signup.html" data-ev="create_account" data-at="close">Create your account</a>
     </div>
   </div>
 </section>
 </main>
 
 <footer id="foot"></footer>
-<div class="dock" id="dock"><a class="btn btn-solid" href="valuate.html">Value my property</a></div>
+<div class="dock" id="dock"><a class="btn btn-solid" href="valuate.html" data-ev="value_home" data-at="dock">Value a home</a></div>
 
 <script src="data.js"></script>
 <script src="site.js"></script>

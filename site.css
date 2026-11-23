@@ -55,7 +55,7 @@ button{cursor:pointer;border:0;background:none;padding:0}
 
 /* header */
 .head{position:fixed;inset:0 0 auto 0;z-index:50;border-bottom:1px solid transparent;transition:background .3s,border-color .3s}
-.head.scrolled,.head.solid{background:rgba(22,22,22,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--rule-soft)}
+.head.scrolled,.head.solid{background:rgba(22,22,22,.98);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--rule-soft)}
 .head .wrap{display:flex;align-items:center;justify-content:space-between;height:var(--row);gap:20px}
 /* The logo: "dealgrade" in lowercase Arial Bold, set tight, with no tile and no dot. It is one outlined file
    (assets/wordmark.svg) used as a mask, so it takes the colour of the text around it and looks the same on every device. */
@@ -92,8 +92,8 @@ body.menu-open{overflow:hidden}
 [data-reveal].in{opacity:1;transform:none}
 
 /* type */
-h1{font-size:clamp(2.7rem,6.3vw,6.3rem);line-height:.97;letter-spacing:-.045em;font-weight:700}
-.h2{font-size:clamp(2rem,4.3vw,4.1rem);line-height:1.02;letter-spacing:-.04em;font-weight:700;max-width:21ch}
+h1{font-size:clamp(2.7rem,6.3vw,6.3rem);line-height:.97;letter-spacing:-.045em;font-weight:700;text-wrap:balance}
+.h2{font-size:clamp(2rem,4.3vw,4.1rem);line-height:1.02;letter-spacing:-.04em;font-weight:700;max-width:21ch;text-wrap:balance}
 .h3{font-size:clamp(1.5rem,2.6vw,2.3rem);line-height:1.08;letter-spacing:-.035em;font-weight:700}
 .sub{margin-top:22px;color:var(--body);font-size:clamp(1.02rem,1.3vw,1.2rem);max-width:36em;line-height:1.5}
 .on-light .sub,.light .sub{color:var(--dark-body)}
@@ -127,6 +127,7 @@ section{position:relative}
 .hero-tool{grid-column:8/span 5}
 .lede{font-size:clamp(1.05rem,1.45vw,1.3rem);color:var(--body);max-width:30em;margin-top:26px;line-height:1.45}
 .cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
+.cta-note{margin-top:14px;font-size:14px;color:var(--label)}
 .tool{background:var(--surface);border:1px solid var(--rule);border-radius:22px;padding:clamp(20px,2.2vw,30px)}
 .tool-main{display:flex;align-items:center;gap:clamp(16px,2vw,28px);margin:0 0 26px}
 .reel{--h:clamp(120px,13vw,190px);height:var(--h);width:calc(var(--h)*.74);overflow:hidden;flex:none}
@@ -170,23 +171,16 @@ section{position:relative}
 .proof .wrap{display:grid;grid-template-columns:repeat(4,1fr)}
 .proof .wrap>div{padding:clamp(28px,4vw,48px) clamp(16px,2vw,32px);border-left:1px solid var(--rule-soft)}
 .proof .wrap>div:first-child{border-left:0;padding-left:0}
-.proof strong{display:block;font-size:clamp(2rem,4vw,3.7rem);letter-spacing:-.045em;line-height:1;font-weight:700}
-.proof p{margin-top:12px;color:var(--body);font-size:15px;max-width:19em}
+.proof strong{display:block;font-size:clamp(1.9rem,3.3vw,2.9rem);letter-spacing:-.045em;line-height:1;font-weight:700;white-space:nowrap}
+.proof p{margin-top:12px;color:var(--body);font-size:15px}
 
-.how-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(24px,4vw,72px);margin-top:clamp(40px,6vw,80px)}
-.how-steps{grid-column:1/span 5}
-.how-sheet{grid-column:7/span 6}
-.step{min-height:62vh;display:flex;flex-direction:column;justify-content:center;opacity:.32;transition:opacity .5s}
-.step.on{opacity:1}
-.step .n{font-size:clamp(3rem,6vw,5.4rem);font-weight:700;letter-spacing:-.05em;line-height:1;color:var(--indigo-light)}
-.step h3{font-size:clamp(1.5rem,2.4vw,2.2rem);letter-spacing:-.03em;line-height:1.1;margin-top:14px}
-.step p{margin-top:14px;color:var(--body);max-width:26em}
-.step-vis{display:none}
-.sheet-stick{position:sticky;top:calc(50vh - 230px)}
-.sheet{background:var(--greige);color:var(--dark-ink);border-radius:22px;padding:clamp(22px,2.6vw,36px)}
-.sheet .grp{transition:opacity .6s var(--ease),transform .6s var(--ease)}
-.sheet .grp+.grp{margin-top:22px;padding-top:22px;border-top:1px solid var(--dark-rule)}
-.sheet[data-step="1"] .g2,.sheet[data-step="1"] .g3,.sheet[data-step="2"] .g3{opacity:0;transform:translateY(18px)}
+/* the deal you were sent: an example message, and the sheet Dealgrade answers with */
+.chk-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(24px,4vw,64px);align-items:center}
+.chk-copy{grid-column:1/span 6}
+.chk-vis{grid-column:8/span 5}
+.msg{margin:0 14% 14px 0;background:var(--surface-2);border-radius:20px 20px 20px 6px;padding:16px 20px;font-size:16px;line-height:1.45}
+.sheet{background:var(--greige);color:var(--dark-ink);border-radius:22px 22px 6px 22px;padding:clamp(20px,2.4vw,30px);margin-left:14%}
+.sheet .grp+.grp{margin-top:20px;padding-top:20px;border-top:1px solid var(--dark-rule)}
 .rows{display:grid;grid-template-columns:auto 1fr;gap:9px 22px;font-size:16px}
 .rows dt{color:var(--dark-body)} .rows dd{font-weight:700;text-align:right}
 .worth{display:flex;align-items:baseline;justify-content:space-between;gap:8px 16px;flex-wrap:wrap}
@@ -200,10 +194,6 @@ section{position:relative}
 .gradeline .big{font-size:clamp(4rem,7vw,6rem);font-weight:700;line-height:.9;letter-spacing:-.05em}
 .gradeline p{font-size:15px;color:var(--dark-body)}
 .gradeline p b{display:block;color:var(--dark-ink);font-size:1.25rem;letter-spacing:-.02em}
-.sheet .mini i{transform:scaleX(0);transform-origin:left;transition:transform 1s var(--ease) .2s}
-.sheet:not([data-step="1"]) .mini i{transform:scaleX(1)}
-.sheet .gradeline .big{transform:scale(.6);opacity:0;transition:transform .6s cubic-bezier(.2,1.5,.4,1) .15s,opacity .3s .15s}
-.sheet[data-step="3"] .gradeline .big{transform:none;opacity:1}
 
 .mk-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(24px,4vw,64px);align-items:start}
 .mk-copy{grid-column:1/span 6}
@@ -290,7 +280,7 @@ th[aria-sort="ascending"] button::after{transform:rotate(180deg);margin-top:-4px
 .lg-qs a:hover,.lg-qs button:hover{padding-left:12px;color:var(--indigo-light)}
 .lg-qs svg{width:22px;height:22px;flex:none}
 
-.close{overflow:hidden;min-height:min(92vh,820px);display:flex;align-items:flex-end}
+.close{overflow:hidden;min-height:min(78vh,720px);display:flex;align-items:flex-end}
 .close-bg{position:absolute;inset:-12% 0;z-index:0}
 .close-bg img{width:100%;height:100%;object-fit:cover;will-change:transform}
 .close::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(22,22,22,.5),rgba(22,22,22,.72) 45%,#161616 100%);z-index:1}
@@ -335,6 +325,33 @@ footer{padding:44px 0 56px;border-top:1px solid var(--rule-soft);font-size:14px;
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .form-grid .full{grid-column:1/-1}
 
+/* the account door: one control, the same on every page */
+.door{background:var(--greige);color:var(--dark-ink);border-radius:22px;padding:clamp(22px,2.8vw,36px);max-width:720px}
+.light .door,.on-light .door{background:#fff}
+.door .h3{max-width:22ch}
+.door-line{margin-top:10px;color:var(--dark-body);max-width:36em}
+.door form{margin-top:20px}
+.door .row{display:grid;grid-template-columns:1fr auto;gap:10px}
+.door .input{background:#fff;border-color:rgba(30,30,30,.2);color:var(--dark-ink)}
+.light .door .input,.on-light .door .input{background:var(--greige)}
+.door .input:focus{outline:0;border-color:var(--indigo-deep);box-shadow:0 0 0 3px rgba(74,80,153,.18)}
+.door .input[aria-invalid="true"]{border-color:#a8452f}
+.door .btn-solid{background:var(--dark-ink);color:var(--ink)}
+.door .btn-solid:hover{background:var(--indigo-deep);color:#fff}
+.door-lab{display:block;font-size:14px;font-weight:700;margin-bottom:8px}
+.door small{display:block;margin-top:8px;font-size:13px;color:var(--dark-body)}
+.door-fine{margin-top:14px;font-size:14px;color:var(--dark-body)}
+.door-fine a,.back-l{font-weight:700;color:inherit;border-bottom:1px solid currentColor;font-size:14px}
+.door-fine a{white-space:nowrap}
+.door :focus-visible{outline-color:var(--indigo-deep)}
+.door-wrap{margin-top:clamp(28px,4vw,44px)}
+.auth-form .door{background:none;padding:0;border-radius:0}
+.auth-form .door .h3{font-size:clamp(1.9rem,3vw,2.6rem);letter-spacing:-.04em;line-height:1.02}
+@media (max-width:560px){.door .row{grid-template-columns:1fr}}
+.tracklog{position:fixed;left:10px;bottom:10px;z-index:90;width:min(300px,calc(100vw - 20px));max-height:40vh;overflow:auto;background:#fff;color:#141414;border-radius:12px;padding:10px 12px;font-size:12.5px;line-height:1.45;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.tracklog b{display:block;margin-bottom:4px}
+.tracklog div{border-top:1px solid rgba(0,0,0,.1);padding:4px 0}
+
 /* panels */
 .panel{background:var(--surface);border:1px solid var(--rule);border-radius:22px;padding:clamp(20px,2.6vw,34px)}
 .panel.light{background:var(--greige);border-color:transparent;color:var(--dark-ink)}
@@ -349,7 +366,9 @@ footer{padding:44px 0 56px;border-top:1px solid var(--rule-soft);font-size:14px;
 
 /* ---------- valuation page ---------- */
 .val-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(24px,4vw,56px);align-items:start;margin-top:clamp(32px,5vw,56px)}
-.val-form{grid-column:1/span 7}
+/* the form and the card that replaces it share one cell, so one can fade into the other */
+.val-form{grid-column:1/span 7;grid-row:1}
+#gate{background:var(--bg)}
 .val-side{grid-column:8/span 5;position:sticky;top:calc(var(--head) + 24px);display:grid;gap:16px}
 .scale{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--rule)}
 .scale div{padding:22px 16px 6px 0;border-left:1px solid var(--rule-soft);padding-left:16px}
@@ -521,17 +540,14 @@ footer{padding:44px 0 56px;border-top:1px solid var(--rule-soft);font-size:14px;
   .burger{display:grid}
 }
 @media (max-width:1000px){
-  .hero-copy,.hero-tool,.how-steps,.how-sheet,.mk-copy,.mk-wall,.ask-copy,.ask-ui,.dist-copy,.dist-chart,.px-chart,.px-table,.lg-copy,.lg-qs,.val-form,.val-side,.pj-title,.pj-fast,.pj-main,.pj-side{grid-column:1/-1}
+  .hero-copy,.hero-tool,.chk-copy,.chk-vis,.mk-copy,.mk-wall,.ask-copy,.ask-ui,.dist-copy,.dist-chart,.px-chart,.px-table,.lg-copy,.lg-qs,.val-form,.val-side,.pj-title,.pj-fast,.pj-main,.pj-side{grid-column:1/-1}
   .val-side,.pj-side{position:static}
   .proof .wrap{grid-template-columns:1fr 1fr}
   .proof .wrap>div{border-left:0;padding-left:0;border-top:1px solid var(--rule-soft)}
   .proof .wrap>div:nth-child(-n+2){border-top:0}
   .proof .wrap>div:nth-child(even){padding-left:20px;border-left:1px solid var(--rule-soft)}
-  /* how a grade works: each step carries its own piece of the sheet */
-  .how-sheet{display:none}
-  .how-grid{margin-top:28px}
-  .step{min-height:0;opacity:1;padding:30px 0;border-top:1px solid var(--rule-soft)}
-  .step-vis{display:block;margin-top:22px;background:var(--greige);color:var(--dark-ink);border-radius:18px;padding:20px}
+  .proof strong{font-size:clamp(1.5rem,6.6vw,2.6rem)}
+  .chk-vis{max-width:560px}
   .mk-wall{height:440px}
   .dock{display:block}
   body.has-dock footer{padding-bottom:110px}
@@ -577,8 +593,16 @@ footer{padding:44px 0 56px;border-top:1px solid var(--rule-soft);font-size:14px;
   .tool-main{gap:14px}
   .kpis{gap:18px 22px}
   .px-table th:nth-child(4),.px-table td:nth-child(4){display:none}
-  .mk-wall{grid-template-columns:1fr;height:470px}
-  .col.b{display:none}
+  /* phone: the graded projects become one row to swipe, each card whole */
+  .hero .cta .btn-line{display:none}
+  .mk-wall{display:flex;height:auto;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-mask-image:none;mask-image:none;margin:0 calc(var(--pad)*-1);padding:0 var(--pad) 6px;scrollbar-width:none}
+  .mk-wall::-webkit-scrollbar{display:none}
+  .col{display:contents;animation:none}
+  .col.b,.card.dup{display:none}
+  .card{flex:0 0 78%;scroll-snap-align:center}
+  .card:hover{transform:none}
+  .msg{margin-right:8%} .sheet{margin-left:8%}
+  .close{min-height:480px}
   .chart text{font-size:19px}
   .form-grid{grid-template-columns:1fr}
   .stats{gap:22px 16px}
@@ -597,5 +621,4 @@ footer{padding:44px 0 56px;border-top:1px solid var(--rule-soft);font-size:14px;
   .chart .line{stroke-dashoffset:0}.chart .fc,.chart .band,.chart .dot,.chart .dot-l{opacity:1}
   .bar .fill{transform:scaleX(1)} .sets dt,.sets dd{opacity:1;transform:none}
   .mk-wall{overflow:auto}
-  .sheet .grp{opacity:1!important;transform:none!important}.sheet .mini i{transform:scaleX(1)}.sheet .gradeline .big{transform:none;opacity:1}
 }

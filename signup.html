@@ -20,19 +20,33 @@
     </div>
   </div>
   <div class="auth-form">
-    <form id="form" data-go="https://dealgrade.co/signup" novalidate>
-      <h2>Create your account</h2>
-      <p id="why">Save valuations, follow the market and talk to owners directly.</p>
-      <label class="field"><span>Your name</span><input class="input" type="text" name="full_name" placeholder="Layla Haddad" autocomplete="name" required></label>
-      <label class="field"><span>Email</span><input class="input" type="email" name="email" placeholder="you@example.com" autocomplete="email" required></label>
-      <div class="field"><label for="pw">Password</label><div class="pw"><input class="input" id="pw" type="password" name="password" placeholder="Create a password" autocomplete="new-password" required><button type="button" data-show="pw">Show</button></div><small>At least 8 characters, with a letter and a digit.</small></div>
-      <div class="field"><label for="pw2">Confirm password</label><div class="pw"><input class="input" id="pw2" type="password" name="confirm" placeholder="Enter it again" autocomplete="new-password" required><button type="button" data-show="pw2">Show</button></div></div>
-      <button class="btn btn-solid btn-block" type="submit">Send me a code</button>
-      <p>Already have an account? <a href="login.html">Sign in</a></p>
-      <p class="note" style="margin:0">Step 1 of 2. We email you a code to confirm the address.</p>
-    </form>
+    <div id="slot" style="width:min(100%,430px)"></div>
   </div>
 </main>
+<script src="site.js"></script>
 <script src="auth.js"></script>
+<script>
+(function(){
+  /* One short step: an email, then a code. The line says what the account opens, and the visitor goes back to it. */
+  var S = DGS, next = new URLSearchParams(location.search).get('next') || '';
+  var WHY = {
+    result: 'to see your result',
+    projects: 'to see every project and its grade',
+    project: 'to see every layout and the market around it',
+    distress: 'to see distress sales, each priced against Dealgrade\'s valuation',
+    listing: 'to open this home and message its owner',
+    sell: 'to list your home and talk to buyers directly',
+    legal: 'to keep asking the legal guide'
+  };
+  var back = 'index.html';
+  try { if(document.referrer && new URL(document.referrer).origin === location.origin && !/signup|login|forgot/.test(document.referrer)) back = document.referrer; } catch(e) {}
+  S.$('#slot').innerHTML = S.door({
+    title: 'Create your account',
+    line: WHY[next] ? 'It takes an email and a code, ' + WHY[next] + '.' : 'It takes an email and a code. Then you save valuations, follow the market and talk to owners directly.',
+    next: next || 'signup', go: back
+  });
+  S.watch(document);
+})();
+</script>
 </body>
 </html>

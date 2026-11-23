@@ -79,13 +79,14 @@
     else addEventListener('resize', function(){ W = track.clientWidth || W; lastX = null; draw(); });
     /* With a mouse, press anywhere on the track and drag. With a finger, only the dot starts a drag, so scrolling the page
        past the card never moves the price by accident. A tap on the track still moves the price there. */
-    var down = false, touched = false;
+    var down = false, touched = false, counted = false;
+    function used(how){ touched = true; if(!counted){ counted = true; S.track('demo_used', {at:'hero', how:how}); } }
     wrap.addEventListener('pointerdown', function(e){
       if(e.target.closest('button')) return;
       var onHandle = e.target === handle || handle.contains(e.target);
       if(e.pointerType === 'touch' && !onHandle) return;
       if(!onHandle && !e.target.closest('.track')) return;
-      stop(); touched = true; down = true;
+      stop(); used('drag'); down = true;
       try { wrap.setPointerCapture(e.pointerId); } catch(err) {}
       fromX(e.clientX); e.preventDefault();
     });
@@ -94,7 +95,7 @@
     wrap.addEventListener('pointerup', up); wrap.addEventListener('pointercancel', up);
     track.addEventListener('click', function(e){
       if(e.target === handle || handle.contains(e.target)) return;
-      touched = true; var r = track.getBoundingClientRect(), to = MIN + (e.clientX - r.left) / r.width * (MAX - MIN);
+      used('tap'); var r = track.getBoundingClientRect(), to = MIN + (e.clientX - r.left) / r.width * (MAX - MIN);
       if(reduce) set(to); else glide(Math.max(MIN, Math.min(MAX, to)), 520);
     });
     handle.addEventListener('keydown', function(e){
@@ -104,12 +105,12 @@
       else if(k === 'Home') to = MIN;
       else if(k === 'End') to = MAX;
       if(to === null) return;
-      e.preventDefault(); touched = true;
+      e.preventDefault(); used('keys');
       to = Math.max(MIN, Math.min(MAX, to));
       if(reduce) set(to); else glide(to, k === 'Home' || k === 'End' ? 520 : 140);
     });
     /* a letter moves the price to the middle of that grade (to the real asking price for C) */
-    zb.forEach(function(b, i){ b.addEventListener('click', function(){ touched = true; var to = i === 2 ? ASK : (edges[i] + edges[i + 1]) / 2; if(reduce) set(to); else glide(to, 760, 'inOut'); }); });
+    zb.forEach(function(b, i){ b.addEventListener('click', function(){ used('letter'); var to = i === 2 ? ASK : (edges[i] + edges[i + 1]) / 2; if(reduce) set(to); else glide(to, 760, 'inOut'); }); });
     if(reduce){ set(ASK); return; }
     /* Opening: the price starts far above the range and comes down to the real asking price, slow at both ends. It waits
        until the card has finished fading in, so the two movements never run on top of each other, and it does not start
@@ -124,20 +125,6 @@
     } else setTimeout(open, 900);
   })();
 
-  /* how a grade is worked out: on a laptop the sheet follows the step in view */
-  (function(){
-    var sheet = $('#sheet'), steps = $$('.step'); if(!sheet) return;
-    if(reduce || !('IntersectionObserver' in window)){ sheet.dataset.step = '3'; steps.forEach(function(s){ s.classList.add('on'); }); return; }
-    var so = new IntersectionObserver(function(es){
-      es.forEach(function(e){
-        if(!e.isIntersecting) return;
-        sheet.dataset.step = e.target.dataset.step;
-        steps.forEach(function(s){ s.classList.toggle('on', s === e.target); });
-      });
-    }, {rootMargin:'-48% 0px -48% 0px', threshold:0});
-    steps.forEach(function(s){ so.observe(s); });
-  })();
-
   /* marketplace wall: real projects with their grades */
   (function(){
     var wall = $('#wall'); if(!wall || !DG.cards.length) return;
@@ -149,7 +136,7 @@
         + '<p class="dl' + (same ? ' same' : '') + '">' + esc(c.home.split(',')[0]) + ' · ' + (same ? 'about the same' : esc(c.gap.replace(/^[-−+]/, '').replace('cheaper', 'below estimate').replace('dearer', 'above estimate'))) + ' · ' + esc(c.sales) + '</p></a>';
     };
     var half = Math.ceil(DG.cards.length / 2), a = DG.cards.slice(0, half), b = DG.cards.slice(half);
-    var col = function(list, cls){ var h = list.map(card).join(''); return '<div class="col ' + cls + '">' + h + (reduce ? '' : h.replace(/<a /g, '<a tabindex="-1" aria-hidden="true" ')) + '</div>'; };
+    var col = function(list, cls){ var h = list.map(card).join(''); return '<div class="col ' + cls + '">' + h + (reduce ? '' : h.replace(/<a class="card"/g, '<a class="card dup" tabindex="-1" aria-hidden="true"')) + '</div>'; };
     wall.innerHTML = col(a, 'a') + col(b, 'b');
   })();
 

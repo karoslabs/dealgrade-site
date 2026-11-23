@@ -37,7 +37,7 @@
     <div class="gradepick" role="group" aria-label="Deal grade"><button type="button" data-g="A" aria-pressed="false" aria-label="Grade A">A</button><button type="button" data-g="B" aria-pressed="false" aria-label="Grade B">B</button><button type="button" data-g="C" aria-pressed="false" aria-label="Grade C">C</button><button type="button" data-g="D" aria-pressed="false" aria-label="Grade D">D</button><button type="button" data-g="F" aria-pressed="false" aria-label="Grade F">F</button></div>
     <label class="check"><input type="checkbox" id="graded" name="graded"> Graded only</label>
     <label class="sr" for="sort">Sort</label>
-    <select class="select" id="sort" name="sort"><option value="soon">Soonest handover</option><option value="value">Best value first</option><option value="low">Lowest price</option><option value="high">Highest price</option></select>
+    <select class="select" id="sort" name="sort"><option value="value">Best value first</option><option value="soon">Soonest handover</option><option value="low">Lowest price</option><option value="high">Highest price</option></select>
   </form>
 </div>
 
@@ -46,6 +46,7 @@
     <div class="count-row"><span id="count" aria-live="polite"></span><button type="button" id="clear" hidden>Clear all filters</button></div>
     <div class="pgrid" id="grid"></div>
     <div class="more"><button class="btn btn-line" type="button" id="load">Show more projects</button></div>
+    <div class="door-wrap" id="doorSlot"></div>
     <p class="note" style="margin-top:40px;max-width:60em">Project details (names, locations, layouts, launch prices and handover dates) are as published on Property Finder's new-projects pages. Valuations are Dealgrade's own, from registered Dubai Land Department sales. They are estimates, not certified valuations.</p>
   </div>
 </section>
@@ -86,7 +87,8 @@
       return true;
     });
     var s = f.sort.value;
-    if(s === 'value') list.sort(function(a, b){ return (a.gp == null) - (b.gp == null) || (a.gp || 0) - (b.gp || 0); });
+    /* best value: grade A first, then B and so on; inside a grade, the price furthest below its estimate first */
+    if(s === 'value') list.sort(function(a, b){ var ga = a.g ? 'ABCDF'.indexOf(a.g) : 9, gb = b.g ? 'ABCDF'.indexOf(b.g) : 9; return ga - gb || (a.gp == null) - (b.gp == null) || (a.gp || 0) - (b.gp || 0); });
     else if(s === 'low') list.sort(function(a, b){ return (a.fa == null) - (b.fa == null) || (a.fa || 0) - (b.fa || 0); });
     else if(s === 'high') list.sort(function(a, b){ return (b.fa || 0) - (a.fa || 0); });
     else list.sort(function(a, b){ return (a.s.indexOf('Selling') !== 0) - (b.s.indexOf('Selling') !== 0) || a.hk - b.hk; });
@@ -97,16 +99,24 @@
     if(!list.length) grid.innerHTML = '<div class="empty" style="grid-column:1/-1"><b>No project matches those filters.</b>Remove one to see more.</div>';
     var u = new URLSearchParams();
     ['q','beds','max','by','status'].forEach(function(k){ if(f[k].value) u.set(k, f[k].value); });
-    if(s !== 'soon') u.set('sort', s); if(graded) u.set('graded', '1'); if(gs.length) u.set('grade', gs.join(''));
+    if(s !== 'value') u.set('sort', s); if(graded) u.set('graded', '1'); if(gs.length) u.set('grade', gs.join(''));
     history.replaceState(null, '', location.pathname + (u.toString() ? '?' + u : ''));
     $$('.gradepick button').forEach(function(b){ b.setAttribute('aria-pressed', !!grades[b.dataset.g]); });
   }
+  /* A visitor sees the first six projects of any search, best value first. The rest opens with a free account. */
+  var FREE = 6, slot = $('#doorSlot'), lastLeft = -1;
   function more(){
-    var next = list.slice(shown, shown + STEP);
+    var next = list.slice(shown, shown + (S.member ? STEP : Math.max(0, FREE - shown)));
     grid.insertAdjacentHTML('beforeend', next.map(card).join(''));
     shown += next.length;
-    load.hidden = shown >= list.length;
-    load.textContent = 'Show more projects (' + (list.length - shown).toLocaleString('en-US') + ' left)';
+    var left = list.length - shown;
+    load.hidden = !S.member || left <= 0;
+    load.textContent = 'Show more projects (' + left.toLocaleString('en-US') + ' left)';
+    if(S.member || left <= 0){ slot.innerHTML = ''; lastLeft = -1; return; }
+    if(left === lastLeft) return;
+    lastLeft = left;
+    slot.innerHTML = S.door({title: 'See the other ' + left.toLocaleString('en-US') + (left === 1 ? ' project.' : ' projects.'), line: 'A free account opens every project, with its grade and the market around it.', next: 'projects'});
+    S.watch(slot);
   }
   /* typing in the search waits a moment before the list redraws, so the cards do not flicker on every letter */
   var wait = null;

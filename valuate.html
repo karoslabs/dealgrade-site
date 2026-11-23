@@ -17,8 +17,8 @@
 <main id="main">
 <section class="page-top">
   <div class="wrap">
-    <h1 data-split>Find out what a Dubai home is worth.</h1>
-    <p class="sub" data-reveal>The estimate comes from the prices similar homes have actually sold for. Add an asking price to see whether it is a good deal.</p>
+    <h1 data-split id="vTitle">Find out what a Dubai home is worth.</h1>
+    <p class="sub" data-reveal id="vSub">The estimate comes from the prices similar homes have actually sold for. Add an asking price to see whether it is a good deal.</p>
 
     <div class="val-grid">
       <form class="val-form panel light" id="form" data-reveal novalidate>
@@ -32,12 +32,14 @@
           <label class="field"><span>Bedrooms</span><select class="select" id="rooms" name="rooms"><option value="Studio">Studio</option><option value="1 B/R" selected>1 bedroom</option><option value="2 B/R">2 bedrooms</option><option value="3 B/R">3 bedrooms</option><option value="4 B/R">4 bedrooms</option><option value="5 B/R">5 bedrooms or more</option></select></label>
           <label class="field"><span>Project</span><input class="input" name="project" placeholder="Optional"></label>
           <label class="field"><span>Building</span><input class="input" name="building" placeholder="Optional"><small>The building matters most. Sales in it are the closest comparison.</small></label>
-          <label class="field full"><span>Asking price in AED</span><input class="input num" name="asking" type="number" inputmode="numeric" min="0" placeholder="Optional, for example 2250000"><small>Add one to get a grade from A to F.</small></label>
+          <label class="field full"><span id="askLab">Asking price in AED</span><input class="input num" id="asking" name="asking" type="number" inputmode="numeric" min="0" placeholder="Optional, for example 2250000"><small id="askHelp">Add one to get a grade from A to F.</small></label>
           <label class="check full"><input type="checkbox" name="parking"> Comes with parking</label>
           <div class="full"><button class="btn btn-solid btn-block" type="submit">Value this home <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></button>
-            <p class="note" id="formNote">No account needed. The more you fill in, the closer the estimate.</p></div>
+            <p class="note" id="formNote">You see the result with a free account. The more you fill in, the closer the estimate.</p></div>
         </div>
       </form>
+
+      <div class="val-form" id="gate" hidden></div>
 
       <aside class="val-side" data-reveal style="--d:120ms">
         <div class="panel" aria-live="polite">
@@ -107,13 +109,34 @@
   fill(); side();
   form.addEventListener('change', function(e){ if(e.target.name === 'type'){ fill(); } side(); });
   area.addEventListener('input', side);
-  /* The valuation itself runs on Dealgrade. The form hands over the three details their page reads from its address. */
+  /* Arriving from "Check a deal": the page speaks about the message the visitor was sent, and the price is needed. */
+  var params = new URLSearchParams(location.search), distress = params.get('from') === 'distress';
+  if(distress){
+    $('#vTitle').textContent = 'Check the deal you were sent.';
+    $('#vSub').textContent = 'Enter the home and the price from the message. The grade tells you whether that price is below what similar homes sold for.';
+    $('#askLab').textContent = 'Price in the message, in AED';
+    $('#asking').placeholder = 'For example 2250000';
+    $('#askHelp').textContent = 'The grade compares this price with the estimate.';
+  }
+  /* The account step. The visitor describes the home first and creates the account to see the result, so every
+     result seen is an account that can be counted. A member goes straight through. The valuation itself runs on
+     Dealgrade: the door hands over the three details their page reads from its address. */
+  var gate = $('#gate');
+  var ROOMS = {'Studio':'Studio', '1 B/R':'1 bedroom', '2 B/R':'2 bedroom', '3 B/R':'3 bedroom', '4 B/R':'4 bedroom', '5 B/R':'5 bedroom'};
   form.addEventListener('submit', function(e){
     e.preventDefault();
-    var a = area.value.trim(), sqm = $('#sqm').value;
+    var a = area.value.trim(), sqm = $('#sqm').value, ask = +$('#asking').value || 0, rooms = $('#rooms').value;
     if(!a || !sqm){ note.textContent = 'Add the area and the size to get an estimate.'; (a ? $('#sqm') : area).focus(); return; }
-    location.href = 'https://dealgrade.co/valuate?area=' + encodeURIComponent(a) + '&rooms=' + encodeURIComponent($('#rooms').value) + '&sqm=' + encodeURIComponent(sqm);
+    if(distress && !ask){ note.textContent = 'Add the price from the message to get a grade.'; $('#asking').focus(); return; }
+    var result = 'https://dealgrade.co/valuate?area=' + encodeURIComponent(a) + '&rooms=' + encodeURIComponent(rooms) + '&sqm=' + encodeURIComponent(sqm);
+    S.track('valuation_submitted', {at: distress ? 'check_deal' : 'valuate', area: a, rooms: rooms, with_price: ask ? 'yes' : 'no'});
+    if(S.member){ location.href = result; return; }
+    var what = ROOMS[rooms] + ' ' + (kind() === 'villas' ? 'villa' : 'apartment') + ' in ' + a + ', ' + sqm + ' sqm' + (ask ? ', at AED ' + ask.toLocaleString('en-US') : '');
+    /* the form fades, the page glides to the card and the card rises in: one movement (swapIn in site.js) */
+    S.swapIn(form, gate, S.door({title: ask ? 'Your grade is ready.' : 'Your estimate is ready.', line: what + '. It comes with ' + (ask ? 'the estimate, its likely range' : 'a likely range') + ' and the recent sales it is based on.', next: 'result', go: result})
+      + '<p style="margin-top:16px"><button class="back-l" type="button" id="gateBack">Change the details</button></p>');
   });
+  gate.addEventListener('click', function(e){ if(e.target.id === 'gateBack') S.swapIn(gate, form, null); });
   var q = new URLSearchParams(location.search).get('area'); if(q){ area.value = q; side(); }
 })();
 </script>

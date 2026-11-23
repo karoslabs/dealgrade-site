@@ -25,6 +25,7 @@
       <button class="btn btn-solid" type="submit">Ask Dealgrade <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></button>
     </form>
     <p class="note" id="askNote" data-reveal>General information, not legal advice. For decisions about a specific property, consult a lawyer or the Dubai Land Department.</p>
+    <div class="door-wrap" id="askDoor" hidden></div>
   </div>
 </section>
 
@@ -70,6 +71,14 @@
   $('#ask').addEventListener('submit', function(e){
     e.preventDefault();
     var v = q.value.trim(); if(!v){ q.focus(); return; }
+    /* the first answer is open to everyone; the next ones open with a free account */
+    var asked = 0; try { asked = +sessionStorage.getItem('dg_asked') || 0; } catch(err) {}
+    if(!DGS.member && asked >= 1){
+      var slot = $('#askDoor');
+      if(slot.hidden) DGS.swapIn(null, slot, DGS.door({title: 'Keep asking with a free account.', line: 'The first answer is open to everyone. The next ones need an account.', next: 'legal'}));
+      return;
+    }
+    try { sessionStorage.setItem('dg_asked', asked + 1); } catch(err) {}
     var go = function(){ location.href = 'https://dealgrade.co/legal'; };
     if(navigator.clipboard) navigator.clipboard.writeText(v).then(go, go); else go();
     note.textContent = 'Opening the guide on Dealgrade. Your question is copied, ready to paste.';

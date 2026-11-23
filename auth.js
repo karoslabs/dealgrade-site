@@ -15,16 +15,22 @@
     sell: 'Sign in to list your home and talk to buyers directly.',
     distress: 'Sign in to see distress sales, each priced against Dealgrade\'s valuation.',
     listing: 'Sign in to open this home and message its owner.',
-    project: 'Sign in to save this project and follow its grade.',
-    matches: 'Sign in to see the buyers and sellers matched to you.'
+    project: 'Sign in to see every layout and the market around it.',
+    matches: 'Sign in to see the buyers and sellers matched to you.',
+    result: 'Sign in to see your result.',
+    projects: 'Sign in to see every project and its grade.',
+    legal: 'Sign in to keep asking the legal guide.'
   };
   var next = new URLSearchParams(location.search).get('next');
   if(why && NEXT[next]){ why.textContent = NEXT[next]; why.className = 'why'; }
+  /* someone sent here by a door who has no account yet keeps their place when they go to create one */
+  var su = document.querySelector('a[href="signup.html"]');
+  if(su && next) su.href = 'signup.html?next=' + encodeURIComponent(next);
   Array.prototype.forEach.call(document.querySelectorAll('[data-show]'), function(b){
     b.addEventListener('click', function(){
       var i = document.getElementById(b.dataset.show), on = i.type === 'password';
       i.type = on ? 'text' : 'password'; b.textContent = on ? 'Hide' : 'Show';
     });
   });
-  form.addEventListener('submit', function(e){ e.preventDefault(); location.href = form.dataset.go; });
+  if(form) form.addEventListener('submit', function(e){ e.preventDefault(); location.href = form.dataset.go; });
 })();
